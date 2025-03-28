@@ -8,7 +8,7 @@ contract HackathonBadge is ERC721URIStorage, Ownable {
     uint256 private _tokenIds;
     mapping(address => bool) public hasBadge;
 
-    constructor() ERC721("HackathonBadge", "HACK") {}
+    constructor() ERC721("HackathonBadge", "HACK") Ownable(msg.sender) {}
 
     function awardBadge(address winner, string memory tokenURI) public onlyOwner {
         require(!hasBadge[winner], "Winner already has a badge.");
