@@ -4,8 +4,7 @@ module.exports = {
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-    "*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{ts,tsx,js,jsx,mdx}",
   ],
   theme: {
     container: {
@@ -17,39 +16,25 @@ module.exports = {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
+        blueNeon: "#00A8E8",
+        darkBg: "#001F3F",
+        neonPink: "#FF007F",
+        darkCard: "#002A5E",
+        background: "#003366",
+        foreground: "#E2E8F0",
+        primary: "#0096FF",
+        "primary-foreground": "#FFFFFF",
+        secondary: "#004488",
+        "secondary-foreground": "#A3BFFA",
+        accent: "#0055AA",
+        "accent-foreground": "#60A5FA",
+        card: "#003F7F",
+        "card-foreground": "#CBD5E1",
+        muted: "#004F9E",
+        "muted-foreground": "#94A3B8",
+        border: "#3366CC",
+        ring: "#2563EB",
+        neonBlue: "#00A8E8",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -58,19 +43,26 @@ module.exports = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: 0 },
+          from: { height: "0px" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          to: { height: "0px" },
+        },
+        glow: {
+          "0%": { textShadow: "0 0 5px #00A8E8, 0 0 10px #00A8E8" },
+          "100%": { textShadow: "0 0 10px #00A8E8, 0 0 20px #00A8E8" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "neon-glow": "glow 1.5s ease-in-out infinite alternate",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
+
+export default config;
