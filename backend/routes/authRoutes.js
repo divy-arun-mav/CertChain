@@ -40,6 +40,7 @@ router.post(
     [
         body("email").isEmail().withMessage("Invalid email"),
         body("password").notEmpty().withMessage("Password is required"),
+        body("walletAddress").isEmail().withMessage("Invalid wallet address")
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -47,7 +48,7 @@ router.post(
 
         try {
             const { email, password } = req.body;
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ email, walletAddress });
 
             if (!user) return res.status(400).json({ message: "Invalid credentials" });
 

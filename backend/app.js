@@ -22,7 +22,7 @@ app.use("/api/enroll", enrollmentRoutes);
 app.post("/api/generate-questions", async (req, res) => {
     const { topic } = req.body;
 
-    const prompt = `Generate 2 multiple-choice questions about ${topic}. 
+    const prompt = `Generate 10 multiple-choice questions about ${topic}. 
     Each question should have 4 options and the correct answer as a separate field.(NO preamble, NO Markdown, NO additional text)`;
 
     try {

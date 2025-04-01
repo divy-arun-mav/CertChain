@@ -1,5 +1,23 @@
 [
     {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "internalType": "enum EduChainCertifications.Role",
+                "name": "role",
+                "type": "uint8"
+            }
+        ],
+        "name": "assignRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "stateMutability": "nonpayable",
         "type": "constructor"
@@ -59,6 +77,104 @@
         "inputs": [
             {
                 "indexed": true,
+                "internalType": "uint256",
+                "name": "certificateId",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "student",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "newScore",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "newCertHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "CertificateUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "student",
+                "type": "address"
+            }
+        ],
+        "name": "IDEUnlocked",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "student",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "courseName",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "score",
+                "type": "uint256"
+            }
+        ],
+        "name": "issueCertificate",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "certificateId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "newScore",
+                "type": "uint256"
+            }
+        ],
+        "name": "reexamineCertificate",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "certificateId",
+                "type": "uint256"
+            }
+        ],
+        "name": "revokeCertificate",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
                 "internalType": "address",
                 "name": "account",
                 "type": "address"
@@ -74,50 +190,14 @@
         "type": "event"
     },
     {
-        "anonymous": false,
         "inputs": [
             {
-                "indexed": true,
                 "internalType": "address",
                 "name": "student",
                 "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "age",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "studentId",
-                "type": "string"
             }
         ],
-        "name": "StudentRegistered",
-        "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
-            },
-            {
-                "internalType": "enum EduChainCertifications.Role",
-                "name": "role",
-                "type": "uint8"
-            }
-        ],
-        "name": "assignRole",
+        "name": "unlockIDE",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -185,56 +265,6 @@
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "getAllCertificates",
-        "outputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "uint256",
-                        "name": "id",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "student",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "courseName",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "score",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "issueDate",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "bool",
-                        "name": "valid",
-                        "type": "bool"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "certificateHash",
-                        "type": "bytes32"
-                    }
-                ],
-                "internalType": "struct EduChainCertifications.Certificate[]",
-                "name": "",
-                "type": "tuple[]"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "address",
@@ -294,26 +324,16 @@
         "inputs": [
             {
                 "internalType": "address",
-                "name": "student",
+                "name": "",
                 "type": "address"
             }
         ],
-        "name": "getStudentDetails",
+        "name": "hasUnlockedIDE",
         "outputs": [
             {
-                "internalType": "string",
+                "internalType": "bool",
                 "name": "",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
+                "type": "bool"
             }
         ],
         "stateMutability": "view",
@@ -325,21 +345,17 @@
                 "internalType": "address",
                 "name": "student",
                 "type": "address"
-            },
-            {
-                "internalType": "string",
-                "name": "courseName",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "score",
-                "type": "uint256"
             }
         ],
-        "name": "issueCertificate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "name": "isIDEUnlocked",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -353,65 +369,6 @@
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "certificateId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "newScore",
-                "type": "uint256"
-            }
-        ],
-        "name": "reexamineCertificate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "student",
-                "type": "address"
-            },
-            {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "age",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "studentId",
-                "type": "string"
-            }
-        ],
-        "name": "registerStudent",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "certificateId",
-                "type": "uint256"
-            }
-        ],
-        "name": "revokeCertificate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -452,40 +409,6 @@
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "students",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "age",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "studentId",
-                "type": "string"
-            },
-            {
-                "internalType": "bool",
-                "name": "registered",
-                "type": "bool"
             }
         ],
         "stateMutability": "view",

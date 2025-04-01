@@ -48,7 +48,10 @@ const EnrolledCourses = () => {
                 My Enrolled Courses
             </h1>
             {enrolledCourses.length === 0 ? (
-                <p className="text-gray-400 mt-6">You have not enrolled in any courses yet.</p>
+                <>
+                    <p className="text-gray-400 mt-6">You have not enrolled in any courses yet.</p>
+                    <Button className="mt-3" onClick={()=>navigate('/courses')}>View All courses</Button>
+                </>
             ) : (
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
                     {enrolledCourses.map((course) => (

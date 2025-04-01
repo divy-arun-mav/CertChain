@@ -8,6 +8,9 @@ import CourseLearning from "./Pages/CourseLearning";
 import StudentTest from "./Pages/StudentTest";
 import Navbar from "./components/Navbar";
 import Auth from "./Pages/Auth";
+import Certificates from "./Pages/Certificates";
+import Cerificate from "./Pages/Cerificate";
+import Acheivements from "./Pages/Acheivements";
 
 function App() {
   return (
@@ -20,11 +23,14 @@ function App() {
         <Route path="/course/:id" element={<CourseDetails />} />
         <Route path="/enrolled/:studentAddress" element={<EnrolledCourses />} />
         <Route path="/learn/:courseId" element={<CourseLearning />} />
-        <Route path="/test" element={<StudentTest />} />
+        <Route path="/test/:topic" element={<StudentTest />} />
+        <Route path="/certificates" element={<Certificates />} />
+        <Route path="/certificate/:id" element={<Cerificate />} />
+        <Route path="/achievments" element={<Acheivements />} />
       </Routes>
       <Toaster
         toastOptions={{
-          duration: 2000
+          duration: 3000
         }}
       />
     </>

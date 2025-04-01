@@ -1,4 +1,10 @@
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-debugger */
+import { Button } from "@/components/ui/button";
+import { useWeb3 } from "@/context/Web3";
+import { extractCorrectAnswer } from "@/utils/AnswerExtracter";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 interface Question {
@@ -9,12 +15,14 @@ interface Question {
 }
 
 const StudentTest = () => {
-    const { courseId } = useParams<{ courseId: string }>();
+    const { topic } = useParams<{ topic: string }>();
     const [questions, setQuestions] = useState<Question[]>([]);
     const [answers, setAnswers] = useState<Record<number, string>>({});
     const [submitted, setSubmitted] = useState<boolean>(false);
     const [score, setScore] = useState<number>(0);
     const [incorrectAnswers, setIncorrectAnswers] = useState<Record<number, string>>({});
+    const [devToolsDetected, setDevToolsDetected] = useState<boolean>(false);
+    const { state, address } = useWeb3();
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -22,7 +30,7 @@ const StudentTest = () => {
                 const response = await fetch("http://localhost:5000/api/generate-questions", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ topic: "Open Campus Edu Chain Blockchain" }),
+                    body: JSON.stringify({ topic }),
                 });
 
                 const data: Question[] = await response.json();
@@ -33,31 +41,97 @@ const StudentTest = () => {
         };
 
         fetchQuestions();
-    }, [courseId]);
+    }, [topic]);
+
+    const issueCertificate = async (correct: number) => {
+        const percentage = (correct / questions.length) * 100;
+        if (percentage < 90) return;
+        toast.success("You are now eligible to issue certificate for " + topic);
+        if (!state?.educhaincontract) {
+            console.log("contract not found");
+            return;
+        }
+        try {
+            const tx = await state.educhaincontract.issueCertificate(address, topic, correct * 100);
+            console.log("Certificate issued successfully!", tx);
+        } catch (err) {
+            console.error("Error issuing certificate:", err);
+        }
+    };
+
+    useEffect(() => {
+        if (localStorage.getItem("devtools-opened") === "true") {
+            resetTest();
+        }
+    }, []);
+
+    useEffect(() => {
+        const detectDevTools = () => {
+            if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
+                handleDevToolsOpen();
+            }
+            const devtoolsChecker = setInterval(() => {
+                const start = performance.now();
+                debugger;
+                if (performance.now() - start > 100) {
+                    handleDevToolsOpen();
+                }
+            }, 1000);
+
+            return () => clearInterval(devtoolsChecker);
+        };
+
+        window.addEventListener("resize", detectDevTools);
+        return () => window.removeEventListener("resize", detectDevTools);
+    }, []);
+
+    const handleDevToolsOpen = () => {
+        console.warn("DevTools detected! Resetting test...");
+        localStorage.setItem("devtools-opened", "true");
+        resetTest();
+    };
+
+    const resetTest = () => {
+        setQuestions([]);
+        setAnswers({});
+        setSubmitted(false);
+        setScore(0);
+        setIncorrectAnswers({});
+        setDevToolsDetected(true);
+        alert("Test has been reset due to security policy!");
+    };
 
     const handleSelect = (questionId: number, answer: string) => {
         setAnswers((prev) => ({ ...prev, [questionId]: answer }));
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        setSubmitted(true);
         let correct = 0;
         const incorrectAnswersMap: Record<number, string> = {};
-        
-        questions.forEach((q) => {
-            const givenAnswer = answers[q.id][0];
-            const correctAnswer = q.correctAnswer.replace("Correct ", "").trim(); 
 
-            if (givenAnswer === correctAnswer) {
-                correct++;
-            } else {
-                incorrectAnswersMap[q.id] = correctAnswer;
+        questions.forEach((q) => {
+            const correctAnswer = extractCorrectAnswer(q);
+            const givenAnswer = answers[q.id];
+
+            if (givenAnswer) {
+                const processedGiven = givenAnswer.replace(/Option\s+[A-D][\):]\s*/, "").trim();
+                if (processedGiven.toLowerCase() === correctAnswer.toLowerCase()) {
+                    correct++;
+                } else {
+                    incorrectAnswersMap[q.id] = correctAnswer;
+                }
             }
         });
 
         setScore(correct);
-        setSubmitted(true);
-        setIncorrectAnswers(incorrectAnswersMap); 
+        setIncorrectAnswers(incorrectAnswersMap);
+        await issueCertificate(correct);
     };
+
+    if (devToolsDetected) {
+        return <h1 className="text-red-500 text-center mt-20 text-2xl font-bold">Test has been reset due to security policy.</h1>;
+    }
 
     return (
         <div className="w-screen min-h-screen bg-gray-900 text-white p-8">
@@ -69,23 +143,22 @@ const StudentTest = () => {
                     <div className="text-center text-2xl font-bold text-green-400">
                         Your Score: {score} / {questions.length}
                     </div>
-
                     <div className="mt-6">
                         {questions.map((q) => (
                             <div key={q.id} className="mb-6">
-                                <h3 className="text-xl font-semibold">{q.question}</h3>
+                                <h3 className="text-xl font-semibold">
+                                    <span>{q.id}) </span>
+                                    {q.question}
+                                </h3>
                                 <div className="mt-2">
                                     {q.options.map((option) => {
                                         const isSelected = answers[q.id] === option;
                                         const isCorrect = q.correctAnswer === option;
                                         const isWrongSelected = isSelected && !isCorrect;
-
-                                        console.log(isCorrect);
-
                                         return (
                                             <label
                                                 key={option}
-                                                className={`block cursor-pointer ${isWrongSelected ? "text-red-400" : isCorrect ? "text-green-400" : "" }`}
+                                                className={`block cursor-pointer ${isCorrect ? "text-red-400" : isWrongSelected ? "text-green-400" : ""}`}
                                             >
                                                 <input
                                                     type="radio"
@@ -100,7 +173,6 @@ const StudentTest = () => {
                                         );
                                     })}
                                 </div>
-
                                 {incorrectAnswers[q.id] && (
                                     <p className="text-red-500">
                                         ❌ Incorrect! Correct answer:{" "}
@@ -133,12 +205,21 @@ const StudentTest = () => {
                         </div>
                     ))}
 
-                    <button
-                        onClick={handleSubmit}
-                        className="mt-6 px-6 py-2 bg-[#00A8E8] text-black font-bold rounded-lg hover:bg-[#0086C7]"
-                    >
-                        Submit Test
-                    </button>
+                    {!submitted ? (
+                        <Button
+                            onClick={handleSubmit}
+                            className="mt-6 px-6 py-2 bg-[#00A8E8] text-black font-bold rounded-lg hover:bg-[#0086C7]"
+                        >
+                            c Submit Test
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={resetTest}
+                            className="mt-6 px-6 py-2 bg-[#00A8E8] text-black font-bold rounded-lg hover:bg-[#0086C7]"
+                        >
+                            Reset Test
+                        </Button>
+                    )}
                 </div>
             )}
         </div>
