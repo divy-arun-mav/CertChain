@@ -11,6 +11,7 @@ import Auth from "./Pages/Auth";
 import Certificates from "./Pages/Certificates";
 import Cerificate from "./Pages/Cerificate";
 import Acheivements from "./Pages/Acheivements";
+import CompletedCourses from "./Pages/CompletedCourses";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/course/:id" element={<CourseDetails />} />
+        <Route path="/courses/completed" element={<CompletedCourses />} />
         <Route path="/enrolled/:studentAddress" element={<EnrolledCourses />} />
         <Route path="/learn/:courseId" element={<CourseLearning />} />
         <Route path="/test/:topic" element={<StudentTest />} />

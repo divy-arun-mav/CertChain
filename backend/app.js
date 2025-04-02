@@ -5,6 +5,8 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const enrollmentRoutes = require("./routes/enrollmentRoutes");
+const hackathonRoutes = require("./routes/hackathonRoutes"); // <-- Import hackathon routes
+const Course = require("./models/Course");
 
 const app = express();
 app.use(express.json());
@@ -18,12 +20,19 @@ mongoose
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/enroll", enrollmentRoutes);
+app.use("/api/hackathons", hackathonRoutes); // <-- Add hackathon routes
 
 app.post("/api/generate-questions", async (req, res) => {
     const { topic } = req.body;
 
-    const prompt = `Generate 10 multiple-choice questions about ${topic}. 
-    Each question should have 4 options and the correct answer as a separate field.(NO preamble, NO Markdown, NO additional text)`;
+    const course = await Course.findOne({ title: topic });
+    if (!course) {
+        return res.status(400).json({ message: "Course not found" });
+    }
+
+    const prompt = `Generate 10 multiple-choice questions about ${topic} by referring to data shown below. 
+  ${course}
+  Each question should have 4 options and the correct answer as a separate field.(NO preamble, NO Markdown, NO additional text)`;
 
     try {
         const response = await fetch(
@@ -34,11 +43,15 @@ app.post("/api/generate-questions", async (req, res) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: prompt
-                        }]
-                    }]
+                    contents: [
+                        {
+                            parts: [
+                                {
+                                    text: prompt,
+                                },
+                            ],
+                        },
+                    ],
                 }),
             }
         );
@@ -51,14 +64,19 @@ app.post("/api/generate-questions", async (req, res) => {
 
         const data = await response.json();
 
-        if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
+        if (
+            data.candidates &&
+            data.candidates.length > 0 &&
+            data.candidates[0].content &&
+            data.candidates[0].content.parts &&
+            data.candidates[0].content.parts.length > 0
+        ) {
             const text = data.candidates[0].content.parts[0].text;
             res.json(parseGeminiResponse(text));
         } else {
             console.error("Gemini API response format error:", data);
             res.status(500).json({ error: "Invalid response format from Gemini API" });
         }
-
     } catch (error) {
         console.error("Error generating questions:", error);
         res.status(500).json({ error: "Failed to fetch AI-generated questions" });

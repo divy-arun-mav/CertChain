@@ -33,7 +33,16 @@ router.post("/:courseId", async (req, res) => {
 
 router.get("/:studentAddress", async (req, res) => {
     try {
-        const enrollments = await Enrollment.find({ studentAddress: req.params.studentAddress }).populate("courseId");
+        const enrollments = await Enrollment.find({ studentAddress: req.params.studentAddress, completed: false }).populate("courseId");
+        res.json(enrollments);
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching enrollments" });
+    }
+});
+
+router.get("/completed/:studentAddress", async (req, res) => {
+    try {
+        const enrollments = await Enrollment.find({ studentAddress: req.params.studentAddress, completed: true }).populate("courseId");
         res.json(enrollments);
     } catch (err) {
         res.status(500).json({ message: "Error fetching enrollments" });

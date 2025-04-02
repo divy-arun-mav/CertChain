@@ -26,6 +26,9 @@ const Navbar = () => {
                                 <Link to={`/enrolled/${address}`} className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
                                     Enrolled courses
                                 </Link>
+                                <Link to="/courses/completed" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
+                                    Completed Courses
+                                </Link>
                                 <Link to="/certificates" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
                                     Certificates
                                 </Link>

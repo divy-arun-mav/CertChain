@@ -44,7 +44,7 @@ const StudentTest = () => {
     }, [topic]);
 
     const issueCertificate = async (correct: number) => {
-        const percentage = (correct / questions.length) * 100;
+        const percentage = correct * 10;
         if (percentage < 90) return;
         toast.success("You are now eligible to issue certificate for " + topic);
         if (!state?.educhaincontract) {
@@ -99,6 +99,14 @@ const StudentTest = () => {
         setIncorrectAnswers({});
         setDevToolsDetected(true);
         alert("Test has been reset due to security policy!");
+    };
+
+    const testReset = () => {
+        setQuestions([]);
+        setAnswers({});
+        setSubmitted(false);
+        setScore(0);
+        setIncorrectAnswers({});
     };
 
     const handleSelect = (questionId: number, answer: string) => {
@@ -204,26 +212,26 @@ const StudentTest = () => {
                             </div>
                         </div>
                     ))}
-
-                    {!submitted ? (
-                        <Button
-                            onClick={handleSubmit}
-                            className="mt-6 px-6 py-2 bg-[#00A8E8] text-black font-bold rounded-lg hover:bg-[#0086C7]"
-                        >
-                            c Submit Test
-                        </Button>
-                    ) : (
-                        <Button
-                            onClick={resetTest}
-                            className="mt-6 px-6 py-2 bg-[#00A8E8] text-black font-bold rounded-lg hover:bg-[#0086C7]"
-                        >
-                            Reset Test
-                        </Button>
-                    )}
+                    <Button
+                        onClick={handleSubmit}
+                        className="mt-6 px-6 py-2 bg-[#00A8E8] text-black font-bold rounded-lg hover:bg-[#0086C7]"
+                    >
+                        Submit Test
+                    </Button>
                 </div>
+            )}
+
+            {submitted && (
+                <Button
+                    onClick={testReset}
+                    className="mt-6 px-6 py-2 bg-[#00A8E8] text-black font-bold rounded-lg hover:bg-[#0086C7]"
+                >
+                    Reset Test
+                </Button>
             )}
         </div>
     );
+
 };
 
 export default StudentTest;
