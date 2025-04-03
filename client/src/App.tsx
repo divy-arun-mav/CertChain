@@ -17,6 +17,11 @@ import Hackathons from "./Pages/Hackathons";
 import HackathonDetail from "./Pages/HackathonDetails";
 import MyProject from "./Pages/MyProject";
 import ParticipatedHackathons from "./Pages/ParticipatedHackathons";
+import CreatedHacks from "./Pages/CreatedHacks";
+import CreatorDashboard from "./Pages/CreatorDashboard";
+import EditHackathon from "./Pages/EditHackathon";
+import AwardPrizes from "./Pages/AwardPrizes";
+import SolidityGen from "./Pages/SolidityGen";
 
 function App() {
   return (
@@ -38,7 +43,12 @@ function App() {
         <Route path="/hackathon/:id" element={<HackathonDetail />} />
         <Route path="/hackathon/project" element={<MyProject />} />
         <Route path="/hackathon/participated" element={<ParticipatedHackathons />} />
+        <Route path="/my-hackathons" element={<CreatedHacks />} />
+        <Route path="/my-hackathons/:id" element={<CreatorDashboard />} />
+        <Route path="/edit-hackathon/:id" element={<EditHackathon />} />
+        <Route path="/award-prize/:id" element={<AwardPrizes />} />
         <Route path="/hackathon" element={<Hackathons />} />
+        <Route path="/solidity-ide" element={<SolidityGen />} />
       </Routes>
       <Toaster
         toastOptions={{

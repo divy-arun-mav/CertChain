@@ -13,6 +13,7 @@ type Hackathon = {
     theme: string;
     startDate: string;
     endDate: string;
+    status: string;
     image?: string;
 };
 
@@ -40,17 +41,27 @@ const Hackathons = () => {
             <div className="mt-4 flex flex-col md:flex-row gap-4">
                 <Button
                     onClick={() => navigate("/hackathon/participated")}
-                    className="border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
-                    variant="outline"
+                    className="border border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
                 >
                     Participated Hackathons
                 </Button>
                 <Button
                     onClick={createHack}
-                    className="border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
-                    variant="outline"
+                    className="border border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
                 >
                     Create Hackathon
+                </Button>
+                <Button
+                    onClick={() => navigate("/my-hackathons")}
+                    className="border border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
+                >
+                    My Created Hackathons
+                </Button>
+                <Button
+                    onClick={() => navigate("/solidity-ide")}
+                    className="border border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
+                >
+                    Special Tool
                 </Button>
             </div>
             <h1 className="text-3xl md:text-5xl font-bold mt-8 text-[#00A8E8]">
@@ -85,7 +96,16 @@ const Hackathons = () => {
                             <p className="text-sm text-gray-400 text-center mt-2">
                                 End: {new Date(hackathon.endDate).toLocaleDateString()}
                             </p>
-                            // In Hackathons.tsx, update your navigation:
+                            {hackathon.status && (
+                                <span
+                                    className={`text-xs font-medium px-2 py-1 rounded-full ${hackathon.status === "completed"
+                                        ? "bg-green-700 text-green-200"
+                                        : "bg-yellow-700 text-yellow-200"
+                                        }`}
+                                >
+                                    {hackathon.status}
+                                </span>
+                            )}
                             <Button
                                 onClick={() => navigate(`/hackathon/${hackathon._id}`, { state: hackathon })}
                                 variant="outline"

@@ -29,12 +29,12 @@ const HackathonSchema = new mongoose.Schema({
             submittedAt: { type: Date, default: Date.now }
         }
     ],
-    awardedPrize: {
+    awardedPrize: [{
         title: String,
         description: String,
         amount: Number,
         winner: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
-    },
+    }],
 });
 
 module.exports = mongoose.model("Hackathon", HackathonSchema);

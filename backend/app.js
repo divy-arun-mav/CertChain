@@ -6,7 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const enrollmentRoutes = require("./routes/enrollmentRoutes");
 const hackathonRoutes = require("./routes/hackathonRoutes");
-const projectRoutes = require("./routes/projectRoutes"); // Import project routes
+const projectRoutes = require("./routes/projectRoutes"); 
 const Course = require("./models/Course");
 
 const app = express();
@@ -23,7 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/enroll", enrollmentRoutes);
 app.use("/api/hackathons", hackathonRoutes);
-app.use("/api/projects", projectRoutes); // Mount the project routes
+app.use("/api/projects", projectRoutes);
 
 app.post("/api/generate-questions", async (req, res) => {
     const { topic } = req.body;

@@ -38,6 +38,7 @@ type HackathonDetail = {
     startDate: string;
     endDate: string;
     image?: string;
+    status: string;
     prizes: Prize[];
     submissions: Submission[];
 };
@@ -212,13 +213,14 @@ const HackathonDetail = () => {
                         onClick={joinHackathon}
                         variant="outline"
                         className="border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
-                        disabled={isJoining}
+                        disabled={isJoining || hackathon.status === "completed"}
                     >
                         {isJoining ? "Joining..." : "Join Hackathon"}
                     </Button>
                 )}
                 <Button
                     onClick={handleProjectNavigation}
+                    // disabled={hackathon.status === "completed"}
                     variant="outline"
                     className="border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
                 >
