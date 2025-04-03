@@ -80,7 +80,6 @@ router.post(
 router.get("/user/:walletAddress", async (req, res) => {
     try {
         const { walletAddress } = req.params;
-        console.log(walletAddress);
         const user = await User.findOne({ walletAddress });
         if (!user)
             return res.status(400).json({ message: "Invalid wallet address" });

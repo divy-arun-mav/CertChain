@@ -260,3 +260,53 @@ button:focus-visible {
     perspective: 210px;
   }
 }
+
+.controls {
+  display: flex;
+  border: 1px solid #ccc;
+  border-top: 0;
+  padding: 10px;
+}
+
+.controls-right {
+  margin-left: auto;
+}
+
+.state {
+  margin: 10px 0;
+  font-family: monospace;
+}
+
+.state-title {
+  color: #999;
+  text-transform: uppercase;
+}
+
+/* hackathonDetail.css */
+.submission-container {
+  @apply mt-8 w-full max-w-3xl;
+}
+
+.submission-heading {
+  @apply text-2xl font-semibold text-[#00A8E8] mb-4;
+}
+
+.submission-grid {
+  @apply grid grid-cols-1 gap-6 mt-4;
+}
+
+.submission-card {
+  @apply text-slate-400 bg-gradient-to-b from-gray-900 to-black border border-[#00A8E8] shadow-2xl p-6 rounded-lg transition-transform transform hover:scale-105;
+}
+
+.submission-title {
+  @apply text-xl font-semibold mb-2;
+}
+
+.submission-image {
+  @apply mt-2 w-24 h-24 rounded-full object-cover border-2 border-[#00A8E8] mb-2;
+}
+
+.submission-link {
+  @apply inline-flex items-center space-x-1 text-blue-500 hover:text-blue-300 transition-colors;
+}

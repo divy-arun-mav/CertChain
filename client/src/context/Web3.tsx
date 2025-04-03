@@ -19,6 +19,7 @@ interface Web3State {
 interface Web3ContextType {
     address: string | null;
     state: Web3State;
+    certi: number;
     connectWallet: () => Promise<void>;
 }
 
@@ -34,9 +35,36 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         // hackathonbadgecontract:  null
     });
 
+    const [certi, setCerti] = useState<number>(0);
     const [address, setAddress] = useState<string | null>(null);
 
+    const getStudentCertificatesCount = async (
+        educhaincontract: ethers.Contract | null,
+        address: string | null
+    ): Promise<void> => {
+        if (!educhaincontract || !address) {
+            console.warn("Contract or address missing");
+            return;
+        }
+
+        try {
+            const certs = await educhaincontract.getStudentCertificates(address);
+            const validCerts = certs.filter((cert: any) => cert.valid);
+            setCerti(validCerts.length);
+        } catch (error) {
+            console.error("Failed to fetch certificates:", error);
+            return;
+        }
+    };
+
     const toChecksum = (address: string) => ethers.utils.getAddress(address);
+
+    useEffect(() => {
+        getStudentCertificatesCount(state.educhaincontract, address);
+    }, [state.educhaincontract,address]);
+
+
+
 
     const connectWallet = async () => {
         const educhaincontractAddress = import.meta.env.VITE_EDUCHAINCERTIFICATIONS_CONTRACT_ADDRESS;
@@ -88,7 +116,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     return (
-        <Web3Context.Provider value={{ address, state, connectWallet }}>
+        <Web3Context.Provider value={{ address, state, connectWallet, certi }}>
             {children}
         </Web3Context.Provider>
     );

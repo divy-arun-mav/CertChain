@@ -10,6 +10,7 @@ const HackathonSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     theme: { type: String },
+    image: { type: String },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     createdAt: { type: Date, default: Date.now },
@@ -24,16 +25,15 @@ const HackathonSchema = new mongoose.Schema({
     submissions: [
         {
             participant: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-            projectUrl: String,
-            projectDescription: String,
-            submittedAt: Date,
-        },
+            project: { type: mongoose.Schema.Types.ObjectId, ref: "Project" }, // now stores project _id
+            submittedAt: { type: Date, default: Date.now }
+        }
     ],
     awardedPrize: {
         title: String,
         description: String,
         amount: Number,
-        winner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        winner: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
     },
 });
 

@@ -1,17 +1,28 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useState, useEffect, useContext, ReactNode } from "react";
+import { createContext, useState, useEffect, useContext, ReactNode, useCallback } from "react";
+import { useWeb3 } from "./Web3";
+
+interface User {
+    _id: string;
+    name: string;
+    email: string;
+    walletAddress?: string;
+}
 
 interface AuthContextType {
     isAuthenticated: boolean;
     login: (email: string, password: string, address: string | null) => Promise<void>;
     register: (fullName: string, email: string, password: string, address: string | null) => Promise<void>;
     logout: () => void;
+    user: User | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [user, setUser] = useState<User | null>(null);
+    const { address } = useWeb3();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -63,10 +74,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = () => {
         localStorage.removeItem("token");
         setIsAuthenticated(false);
+        setUser(null);
     };
 
+    const fetchStudent = useCallback(async () => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/auth/user/${address}`);
+            const data = await res.json();
+            if (data.user && data.user.name) {
+                setUser(data.user);
+            }
+        } catch (error) {
+            console.error("Error fetching student details:", error);
+        }
+    }, [address]);
+
+    useEffect(() => {
+        if (address) {
+            fetchStudent();
+        }
+    }, [fetchStudent, address]);
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, register, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, register, logout, user }}>
             {children}
         </AuthContext.Provider>
     );

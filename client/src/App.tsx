@@ -12,6 +12,11 @@ import Certificates from "./Pages/Certificates";
 import Cerificate from "./Pages/Cerificate";
 import Acheivements from "./Pages/Acheivements";
 import CompletedCourses from "./Pages/CompletedCourses";
+import HackathonCreator from "./Pages/HackathonCreator";
+import Hackathons from "./Pages/Hackathons";
+import HackathonDetail from "./Pages/HackathonDetails";
+import MyProject from "./Pages/MyProject";
+import ParticipatedHackathons from "./Pages/ParticipatedHackathons";
 
 function App() {
   return (
@@ -29,6 +34,11 @@ function App() {
         <Route path="/certificates" element={<Certificates />} />
         <Route path="/certificate/:id" element={<Cerificate />} />
         <Route path="/achievments" element={<Acheivements />} />
+        <Route path="/hackathon/create" element={<HackathonCreator />} />
+        <Route path="/hackathon/:id" element={<HackathonDetail />} />
+        <Route path="/hackathon/project" element={<MyProject />} />
+        <Route path="/hackathon/participated" element={<ParticipatedHackathons />} />
+        <Route path="/hackathon" element={<Hackathons />} />
       </Routes>
       <Toaster
         toastOptions={{

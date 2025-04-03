@@ -35,6 +35,9 @@ const Navbar = () => {
                                 <Link to="/achievments" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
                                     Acheivements
                                 </Link>
+                                <Link to="/hackathon" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
+                                    Build
+                                </Link>
                             </div>
                         ) : (
                             <div className="hidden md:flex gap-6">
