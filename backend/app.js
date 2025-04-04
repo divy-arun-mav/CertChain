@@ -2,11 +2,12 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const solc = require("solc");
 const authRoutes = require("./routes/authRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const enrollmentRoutes = require("./routes/enrollmentRoutes");
 const hackathonRoutes = require("./routes/hackathonRoutes");
-const projectRoutes = require("./routes/projectRoutes"); 
+const projectRoutes = require("./routes/projectRoutes");
 const Course = require("./models/Course");
 
 const app = express();
@@ -25,6 +26,44 @@ app.use("/api/enroll", enrollmentRoutes);
 app.use("/api/hackathons", hackathonRoutes);
 app.use("/api/projects", projectRoutes);
 
+app.post("/api/compile-contract", (req, res) => {
+    const { sourceCode, contractName } = req.body;
+
+    const input = {
+        language: "Solidity",
+        sources: {
+            "Contract.sol": {
+                content: sourceCode,
+            },
+        },
+        settings: {
+            outputSelection: {
+                "*": {
+                    "*": ["abi", "evm.bytecode"],
+                },
+            },
+        },
+    };
+
+    try {
+        const output = JSON.parse(solc.compile(JSON.stringify(input)));
+        const contract = output.contracts["Contract.sol"][contractName];
+
+        if (!contract) {
+            return res.status(400).json({ error: "Contract not found in compilation output" });
+        }
+
+        res.json({
+            abi: contract.abi,
+            bytecode: contract.evm.bytecode.object,
+        });
+    } catch (err) {
+        console.error("Compilation error:", err);
+        res.status(500).json({ error: "Solidity compilation failed" });
+    }
+});
+
+// Gemini question generation
 app.post("/api/generate-questions", async (req, res) => {
     const { topic } = req.body;
 
@@ -83,6 +122,95 @@ app.post("/api/generate-questions", async (req, res) => {
     } catch (error) {
         console.error("Error generating questions:", error);
         res.status(500).json({ error: "Failed to fetch AI-generated questions" });
+    }
+});
+
+// Gemini Solidity contract generation
+app.post("/api/generate-solidity", async (req, res) => {
+    const { field } = req.body;
+    if (!field) {
+        return res.status(400).json({ error: "Field is required" });
+    }
+    const prompt = `write a solidity smart contract for a ${field} and add comments to explain the code.(NO preamble, NO Markdown, NO additional text)`;
+
+    try {
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    contents: [
+                        {
+                            parts: [
+                                {
+                                    text: prompt,
+                                },
+                            ],
+                        },
+                    ],
+                }),
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Gemini API Error:", errorData);
+            return res.status(500).json({ error: "Failed to generate solidity code from Gemini API" });
+        }
+
+        const data = await response.json();
+        if (
+            data.candidates &&
+            data.candidates.length > 0 &&
+            data.candidates[0].content &&
+            data.candidates[0].content.parts &&
+            data.candidates[0].content.parts.length > 0
+        ) {
+            const code = data.candidates[0].content.parts[0].text;
+            res.json({ code });
+        } else {
+            console.error("Gemini API response format error:", data);
+            res.status(500).json({ error: "Invalid response format from Gemini API" });
+        }
+    } catch (error) {
+        console.error("Error generating solidity code:", error);
+        res.status(500).json({ error: "Failed to generate solidity code" });
+    }
+});
+
+// Dummy deploy route (mock)
+app.post("/api/deploy-contract", async (req, res) => {
+    const { code } = req.body;
+    if (!code) {
+        return res.status(400).json({ error: "Code is required for deployment" });
+    }
+    try {
+        const deploymentResult = {
+            address: "0x1234567890abcdef",
+            functions: [
+                {
+                    name: "mint",
+                    inputs: [
+                        { name: "to", type: "address", value: "" },
+                        { name: "amount", type: "uint256", value: "" }
+                    ],
+                },
+                {
+                    name: "transfer",
+                    inputs: [
+                        { name: "to", type: "address", value: "" },
+                        { name: "amount", type: "uint256", value: "" }
+                    ],
+                },
+            ],
+        };
+        res.json(deploymentResult);
+    } catch (error) {
+        console.error("Error deploying contract:", error);
+        res.status(500).json({ error: "Failed to deploy contract" });
     }
 });
 
