@@ -4,11 +4,6 @@
 @import "tw-animate-css";
 @custom-variant dark (&:is(.dark *));
 
-
-.texteditor {
-  font-family: 'Fira Code', monospace;
-}
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -198,6 +193,9 @@ button:focus-visible {
   }
 }
 
+input{
+  color: white;
+}
 
 /* login page animation */
 

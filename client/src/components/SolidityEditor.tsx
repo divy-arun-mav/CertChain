@@ -3,9 +3,10 @@ import Editor, { loader } from "@monaco-editor/react";
 
 interface SolidityEditorProps {
     code: string;
+    setCode: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SolidityEditor: React.FC<SolidityEditorProps> = ({ code }) => {
+const SolidityEditor: React.FC<SolidityEditorProps> = ({ code, setCode }) => {
     useEffect(() => {
         loader.init().then((monaco) => {
             monaco.editor.defineTheme("custom-solidity-theme", {
@@ -33,6 +34,7 @@ const SolidityEditor: React.FC<SolidityEditorProps> = ({ code }) => {
                 defaultLanguage="solidity"
                 theme="custom-solidity-theme"
                 value={code}
+                onChange={(value) => setCode(value || "")}
                 options={{
                     fontSize: 14,
                     minimap: { enabled: false },

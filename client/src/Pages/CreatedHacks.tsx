@@ -96,7 +96,6 @@ const CreatedHacks = () => {
                                     variant="outline"
                                     className="border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
                                     onClick={() => navigate(`/my-hackathons/${hackathon._id}`, { state: hackathon })}
-                                    disabled={hackathon.status === "completed"}
                                 >
                                     View Details
                                 </Button>

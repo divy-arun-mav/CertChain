@@ -128,7 +128,7 @@ const MyProject = () => {
     return (
         <div className="min-h-screen w-screen bg-black text-white flex flex-col items-center p-4">
             <h1 className="text-3xl md:text-5xl font-bold mt-8 text-[#00A8E8]">My Project</h1>
-            {project && create ? (
+            {project && !create ? (
                 <Card className="text-white w-full max-w-3xl bg-gradient-to-b from-gray-900 to-black border border-[#00A8E8] shadow-lg p-6 rounded-lg mt-8">
                     <CardHeader>
                         <CardTitle className="text-white text-2xl font-bold">
