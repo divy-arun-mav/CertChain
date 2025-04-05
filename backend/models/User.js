@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     walletAddress: { type: String, unique: true, sparse: true, required: true },
+    points: { type: Number, default: 0 }, 
     createdAt: { type: Date, default: Date.now },
 });
 

@@ -9,6 +9,7 @@ router.post("/", async (req, res) => {
         const hackathon = new Hackathon({
             title,
             description,
+            image,
             theme,
             startDate,
             endDate,

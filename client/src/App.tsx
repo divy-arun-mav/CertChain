@@ -22,6 +22,7 @@ import CreatorDashboard from "./Pages/CreatorDashboard";
 import EditHackathon from "./Pages/EditHackathon";
 import AwardPrizes from "./Pages/AwardPrizes";
 import SolidityGen from "./Pages/SolidityGen";
+import Leaderboard from "./Pages/LeaderBoard";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         <Route path="/edit-hackathon/:id" element={<EditHackathon />} />
         <Route path="/award-prize/:id" element={<AwardPrizes />} />
         <Route path="/hackathon" element={<Hackathons />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/solidity-ide" element={<SolidityGen />} />
       </Routes>
       <Toaster

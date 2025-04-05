@@ -38,7 +38,7 @@ const Certificates = () => {
           courseName: cert.courseName,
           issuedAt: new Date(cert.issueDate.toNumber() * 1000).toLocaleDateString(),
           certificateHash: cert.certificateHash,
-          score: cert.score.gt ? cert.score.gt(100) ? cert.score.toNumber() / 100 : cert.score.toNumber() : cert.score, // adjust if BigNumber
+          score: cert.score.gt ? cert.score.gt(100) ? cert.score.toNumber() / 100 : cert.score.toNumber() : cert.score, 
           valid: cert.valid,
           student: cert.student,
         }));

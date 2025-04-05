@@ -7,7 +7,6 @@ import { handleDeploy, getContractInstance } from '@/utils/ContractUtils';
 import toast from 'react-hot-toast';
 import { Contract } from 'ethers';
 
-// Helper to format result output in a user-friendly way.
 const formatResult = (res: any): string => {
     if (res == null) return "";
     if (res._isBigNumber) return res.toString();
@@ -24,7 +23,6 @@ const formatResult = (res: any): string => {
     return res.toString();
 };
 
-// Helper to copy text to clipboard.
 const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.success("Copied to clipboard!");
@@ -150,7 +148,6 @@ contract HelloWorld {
             if (res.ok) {
                 setCompileResult(data);
                 toast.success("Compilation successful");
-                // Initialize constructor inputs if there is a constructor
                 const constructorABI = data.abi.find((item: any) => item.type === "constructor");
                 if (constructorABI && constructorABI.inputs) {
                     setConstructorInputs(new Array(constructorABI.inputs.length).fill(""));

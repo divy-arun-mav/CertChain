@@ -1,5 +1,4 @@
-// components/HackathonParticipant.tsx
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type Hackathon = {
     _id: string;
@@ -44,7 +43,7 @@ const HackathonParticipant = () => {
             <h1 className="text-3xl font-bold mb-4">Available Hackathons</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {hackathons.map((hackathon) => (
-                    <div key={hackathon._id} className="border p-4 rounded shadow">
+                    <React.Component key={hackathon._id} className="border p-4 rounded shadow">
                         <h2 className="text-xl font-bold">{hackathon.title}</h2>
                         <p>{hackathon.description}</p>
                         <p className="text-gray-500">Theme: {hackathon.theme}</p>
@@ -60,7 +59,7 @@ const HackathonParticipant = () => {
                         >
                             Join Hackathon
                         </button>
-                    </div>
+                    </React.Component>
                 ))}
             </div>
         </div>

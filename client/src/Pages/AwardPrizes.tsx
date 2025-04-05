@@ -71,6 +71,11 @@ const AwardPrizes: React.FC = () => {
                     };
                 })
                 .filter((prize) => prize !== null);
+            
+            if (!window.confirm("Are you sure you want to award prizes and end this hackathon?")) {
+                setLoading(false);
+                return;
+            }
 
             const res = await fetch(`http://localhost:5000/api/hackathons/award-multiple-prizes/${hackathon._id}`, {
                 method: "POST",
@@ -85,6 +90,23 @@ const AwardPrizes: React.FC = () => {
             await fetch(`http://localhost:5000/api/hackathons/end/${hackathon._id}`, {
                 method: "POST",
             });
+
+            for (const prize of awardedPrizes) {
+                const winnerId = prize.winner;
+                if (!winnerId) continue;
+
+                await fetch(`http://localhost:5000/api/update-points`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userId: winnerId,
+                        event: "hackathonParticipation",
+                        prize: prize.title,
+                    }),
+                });
+            }
 
             toast.success("Prizes awarded and hackathon ended!");
             navigate("/my-hackathons");

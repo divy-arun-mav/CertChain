@@ -1,4 +1,3 @@
-// components/HackathonCreator.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -9,6 +8,12 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 
+interface Prize {
+    title: string;
+    description: string;
+    amount: number;
+}
+
 const HackathonCreator = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -16,6 +21,8 @@ const HackathonCreator = () => {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [prizes, setPrizes] = useState<Prize[]>([{ title: "", description: "", amount: 0 }]);
+
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -34,6 +41,20 @@ const HackathonCreator = () => {
         return fileData.url;
     };
 
+    const handlePrizeChange = (index: number, field: keyof Prize, value: string | number) => {
+        setPrizes((prev) =>
+            prev.map((prize, i) => (i === index ? { ...prize, [field]: value } : prize))
+        );
+    };
+
+    const addPrize = () => {
+        setPrizes([...prizes, { title: "", description: "", amount: 0 }]);
+    };
+
+    const removePrize = (index: number) => {
+        setPrizes(prizes.filter((_, i) => i !== index));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         let imageUrl = "";
@@ -50,7 +71,16 @@ const HackathonCreator = () => {
             }
         }
 
-        const hackathonData = { title, description, theme, creator: user?._id, startDate, endDate, image: imageUrl };
+        const hackathonData = {
+            title,
+            description,
+            theme,
+            creator: user?._id,
+            startDate,
+            endDate,
+            image: imageUrl,
+            prizes: prizes.filter((prize) => prize.title && prize.amount > 0),
+        };
 
         try {
             const res = await fetch("http://localhost:5000/api/hackathons", {
@@ -81,86 +111,77 @@ const HackathonCreator = () => {
                 <CardContent>
                     <form onSubmit={handleSubmit} className="text-white space-y-4">
                         <div>
-                            <Label htmlFor="title" className="mb-1">
-                                Title
-                            </Label>
-                            <Input
-                                id="title"
-                                type="text"
-                                placeholder="Enter title"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                required
-                            />
+                            <Label htmlFor="title">Title</Label>
+                            <Input id="title" type="text" placeholder="Enter title" value={title} onChange={(e) => setTitle(e.target.value)} required />
                         </div>
                         <div>
-                            <Label htmlFor="description" className="mb-1">
-                                Description
-                            </Label>
-                            <Textarea
-                                id="description"
-                                placeholder="Enter description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                required
-                            />
+                            <Label htmlFor="description">Description</Label>
+                            <Textarea id="description" placeholder="Enter description" value={description} onChange={(e) => setDescription(e.target.value)} required />
                         </div>
                         <div>
-                            <Label htmlFor="theme" className="mb-1">
-                                Theme
-                            </Label>
-                            <Input
-                                id="theme"
-                                type="text"
-                                placeholder="Enter theme"
-                                value={theme}
-                                onChange={(e) => setTheme(e.target.value)}
-                            />
+                            <Label htmlFor="theme">Theme</Label>
+                            <Input id="theme" type="text" placeholder="Enter theme" value={theme} onChange={(e) => setTheme(e.target.value)} />
                         </div>
                         <div>
-                            <Label htmlFor="image" className="mb-1">
-                                Hackathon Image
-                            </Label>
-                            <Input
-                                id="image"
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => {
-                                    if (e.target.files && e.target.files[0]) {
-                                        setImageFile(e.target.files[0]);
-                                    }
-                                }}
-                            />
+                            <Label htmlFor="image">Hackathon Image</Label>
+                            <Input id="image" type="file" accept="image/*" onChange={(e) => e.target.files && setImageFile(e.target.files[0])} />
                         </div>
                         <div className="flex space-x-2">
                             <div className="flex-1">
-                                <Label htmlFor="startDate" className="mb-1">
-                                    Start Date
-                                </Label>
-                                <Input
-                                    id="startDate"
-                                    type="date"
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    required
-                                />
+                                <Label htmlFor="startDate">Start Date</Label>
+                                <Input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
                             </div>
                             <div className="flex-1">
-                                <Label htmlFor="endDate" className="mb-1">
-                                    End Date
-                                </Label>
-                                <Input
-                                    id="endDate"
-                                    type="date"
-                                    value={endDate}
-                                    onChange={(e) => setEndDate(e.target.value)}
-                                    required
-                                />
+                                <Label htmlFor="endDate">End Date</Label>
+                                <Input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
                             </div>
                         </div>
-                        <Button type="submit" className="w-full">
-                            Create Hackathon
-                        </Button>
+
+                        <div>
+                            <h2 className="text-xl font-bold text-white">Prizes</h2>
+                            {prizes.map((prize, index) => (
+                                <div key={index} className="gap-2 mt-3">
+                                    <div>
+                                        <Label>Prize Title</Label>
+                                        <Input
+                                            type="text"
+                                            placeholder="Prize title"
+                                            value={prize.title}
+                                            onChange={(e) => handlePrizeChange(index, "title", e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label>Description</Label>
+                                        <Textarea
+                                            placeholder="Prize description"
+                                            value={prize.description}
+                                            onChange={(e) => handlePrizeChange(index, "description", e.target.value)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label>Amount</Label>
+                                        <Input
+                                            type="number"
+                                            placeholder="Enter amount"
+                                            value={prize.amount}
+                                            onChange={(e) => handlePrizeChange(index, "amount", Number(e.target.value))}
+                                            required
+                                        />
+                                    </div>
+                                    {index > 0 && (
+                                        <Button type="button" onClick={() => removePrize(index)} className="mt-2 bg-red-500 hover:bg-red-600">
+                                            Remove Prize
+                                        </Button>
+                                    )}
+                                </div>
+                            ))}
+                            <Button type="button" onClick={addPrize} className="mt-3 bg-blue-600 hover:bg-blue-700 w-full">
+                                + Add Prize
+                            </Button>
+                        </div>
+
+                        <Button type="submit" className="w-full">Create Hackathon</Button>
                     </form>
                 </CardContent>
             </Card>

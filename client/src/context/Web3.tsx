@@ -5,7 +5,7 @@ import educhainabi from "../contracts/EduChainCertifications.sol/abi.json";
 import studygroupabi from "../contracts/StudyGroup.sol/abi.json";
 import studytrackerabi from "../contracts/StudyTracker.sol/abi.json";
 // import hackathonbadgeabi from "../contracts/HackathonBadge.sol/abi.json";
-import { createContext, useEffect, useState, ReactNode, useContext } from "react";
+import { createContext, useEffect, useState, ReactNode, useContext, useCallback } from "react";
 
 interface Web3State {
     provider: ethers.providers.Web3Provider | null;
@@ -66,7 +66,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
 
 
 
-    const connectWallet = async () => {
+    const connectWallet = useCallback(async () => {
         const educhaincontractAddress = import.meta.env.VITE_EDUCHAINCERTIFICATIONS_CONTRACT_ADDRESS;
         const studygroupcontractAddress = import.meta.env.VITE_STUDYGROUP_CONTRACT_ADDRESS;
         const studytrackercontractAddress = import.meta.env.VITE_STUDYTRACKER_CONTRACT_ADDRESS;
@@ -109,11 +109,11 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
             console.error("Error connecting wallet:", error);
             alert("An error occurred while connecting to the wallet. Please try again.");
         }
-    };
+    },[]);
 
     useEffect(() => {
         connectWallet();
-    }, []);
+    }, [connectWallet]);
 
     return (
         <Web3Context.Provider value={{ address, state, connectWallet, certi }}>

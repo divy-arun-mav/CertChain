@@ -1,4 +1,4 @@
-// components/MyProject.tsx
+
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useLocation } from "react-router-dom";
 import Editor from "./Editor";
 import ImageSlideshow from "../components/ImageSlideShow";
+import toast from "react-hot-toast";
+import { uploadImage } from "@/utils/ImageUploader";
 
 type Project = {
     _id: string;
@@ -16,6 +18,7 @@ type Project = {
     projectUrl: string;
     description: string;
     createdAt: string;
+    image: string | null;
     images: string[];
 };
 
@@ -31,6 +34,7 @@ const MyProject = () => {
     const [title, setTitle] = useState("");
     const [projectUrl, setProjectUrl] = useState("");
     const [description, setDescription] = useState("");
+    const [logo, setLogo] = useState<string | null>(null);
     const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
     const [slideshowOpen, setSlideshowOpen] = useState(false);
@@ -40,7 +44,7 @@ const MyProject = () => {
         const fetchProject = async () => {
             if (!user) return;
             try {
-                const endpoint = `http://localhost:5000/api/projects/my-project?userId=${user._id}`;
+                const endpoint = `http://localhost:5000/api/projects/my-project?userId=${user._id}&hackathonId=${hackathonId}`;
                 const res = await fetch(endpoint, {
                     headers: { "Content-Type": "application/json" },
                 });
@@ -54,7 +58,7 @@ const MyProject = () => {
             setLoading(false);
         };
         fetchProject();
-    }, [user]);
+    }, [hackathonId, user]);
 
     const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -68,18 +72,22 @@ const MyProject = () => {
         }
     };
 
+    const handleLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            try {
+                const url = await uploadImage(file);
+                setLogo(url);
+            } catch (error) {
+                console.error("Error uploading logo:", error);
+            }
+        }
+    };
+
     const uploadImages = async (files: File[]): Promise<string[]> => {
         const uploadPromises = files.map((file) => {
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "insta-clone");
-            formData.append("cloud_name", "djy7my1mw");
-            return fetch(`https://api.cloudinary.com/v1_1/djy7my1mw/upload`, {
-                method: "POST",
-                body: formData,
-            })
-                .then((res) => res.json())
-                .then((data) => data.secure_url);
+            console.log(file)
+            return uploadImage(file);
         });
         return Promise.all(uploadPromises);
     };
@@ -91,29 +99,37 @@ const MyProject = () => {
     const handleCreateProject = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsCreating(true);
+
         try {
             const payload = {
                 title,
                 projectUrl,
                 description,
+                image: logo,
                 creator: user?._id,
                 images: uploadedImages,
                 ...(hackathonId && { hackathon: hackathonId }),
             };
+
             const res = await fetch("http://localhost:5000/api/projects", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
+
             const data = await res.json();
             if (res.ok) {
                 setProject(data.project);
+                toast.success("Project Submitted successfully!");
             } else {
                 console.error(data.message);
+                toast.error(data.message);
             }
         } catch (error) {
             console.error("Error creating project:", error);
+            toast.error("Error creating project");
         }
+
         setIsCreating(false);
     };
 
@@ -128,9 +144,10 @@ const MyProject = () => {
     return (
         <div className="min-h-screen w-screen bg-black text-white flex flex-col items-center p-4">
             <h1 className="text-3xl md:text-5xl font-bold mt-8 text-[#00A8E8]">My Project</h1>
-            {project && !create ? (
+            {project && create ? (
                 <Card className="text-white w-full max-w-3xl bg-gradient-to-b from-gray-900 to-black border border-[#00A8E8] shadow-lg p-6 rounded-lg mt-8">
-                    <CardHeader>
+                    <CardHeader className="flex justify-center items-center gap-4">
+                        {project.image && (<img src={project.image} className="rounded-full w-20 h-20 border border-blue-400 p-2 bg-blue-950" />)}
                         <CardTitle className="text-white text-2xl font-bold">
                             {project.title}
                         </CardTitle>
@@ -200,7 +217,16 @@ const MyProject = () => {
                                     onChange={(e) => setProjectUrl(e.target.value)}
                                     required
                                 />
-                            </div>
+                                </div>
+                                <div>
+                                    <Label htmlFor="logo" className="mb-1">Project Logo</Label>
+                                    <Input id="logo" type="file" onChange={handleLogoChange} />
+                                </div>
+                                {logo && (
+                                    <div className="mt-2">
+                                        <img src={logo} alt="Project Logo" className="w-min object-cover rounded" />
+                                    </div>
+                                )}
                             <div className="w-full">
                                 <Label htmlFor="description" className="mb-1">Project Description</Label>
                                 <Editor value={description} onChange={setDescription} />

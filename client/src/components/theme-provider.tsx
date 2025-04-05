@@ -7,7 +7,6 @@ interface ThemeContextType {
     setTheme: (theme: Theme) => void
 }
 
-// Create context with a default value
 const ThemeProviderContext = createContext<ThemeContextType | undefined>(undefined)
 
 interface ThemeProviderProps {
@@ -44,7 +43,7 @@ export function ThemeProvider({ children, defaultTheme = "system", storageKey = 
     return <ThemeProviderContext.Provider value={value}>{children}</ThemeProviderContext.Provider>
 }
 
-// Custom Hook
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = (): ThemeContextType => {
     const context = useContext(ThemeProviderContext)
     if (!context) throw new Error("useTheme must be used within a ThemeProvider")

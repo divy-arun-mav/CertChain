@@ -1,11 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-debugger */
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import { useWeb3 } from "@/context/Web3";
 import { extractCorrectAnswer } from "@/utils/AnswerExtracter";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface Question {
     id: number;
@@ -23,6 +25,8 @@ const StudentTest = () => {
     const [incorrectAnswers, setIncorrectAnswers] = useState<Record<number, string>>({});
     const [devToolsDetected, setDevToolsDetected] = useState<boolean>(false);
     const { state, address } = useWeb3();
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -54,6 +58,7 @@ const StudentTest = () => {
         try {
             const tx = await state.educhaincontract.issueCertificate(address, topic, correct * 100);
             console.log("Certificate issued successfully!", tx);
+            toast.success("Certificate issued successfully!");
         } catch (err) {
             console.error("Error issuing certificate:", err);
         }
@@ -135,6 +140,19 @@ const StudentTest = () => {
         setScore(correct);
         setIncorrectAnswers(incorrectAnswersMap);
         await issueCertificate(correct);
+        await fetch(`http://localhost:5000/api/update-points`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId: user?._id,
+                event: "courseCompleted",
+                prize: null,
+            }),
+        });
+        toast.success("You gained 40 points for completing the course!");
+        navigate('/certificates');
     };
 
     if (devToolsDetected) {

@@ -20,7 +20,8 @@ type Project = {
     title: string;
     projectUrl: string;
     description: string;
-    images: string[]; // Assuming images is an array of URLs
+    image: string | null;
+    images: string[];
 };
 
 type Submission = {
@@ -149,7 +150,7 @@ const HackathonDetail = () => {
                 <img
                     src={hackathon.image}
                     alt={hackathon.title}
-                    className="max-w-10/12 object-cover rounded-lg border-2 border-[#00A8E8] mt-4"
+                    className="max-w-7/12 object-cover rounded-lg border-2 border-[#00A8E8] mt-4"
                 />
             )}
             <p className="mt-4 max-w-2xl text-center">{hackathon.description}</p>
@@ -172,7 +173,7 @@ const HackathonDetail = () => {
                                 <CardContent>
                                     <div className="text-sm flex justify-between items-center">
                                         <img
-                                            src={submission.project.images[0]}
+                                            src={submission.project.image || submission.project.images[0]}
                                             alt={submission.project.title}
                                             className="submission-image"
                                         />
@@ -220,7 +221,6 @@ const HackathonDetail = () => {
                 )}
                 <Button
                     onClick={handleProjectNavigation}
-                    // disabled={hackathon.status === "completed"}
                     variant="outline"
                     className="border-[#00A8E8] text-[#00A8E8] hover:bg-[#00A8E8] hover:text-white"
                 >

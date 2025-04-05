@@ -10,12 +10,10 @@ router.get("/my-project", async (req, res) => {
         if (!userId) {
             return res.status(400).json({ message: "User ID is required" });
         }
-
-        const query = { creator: userId };
-        if (hackathonId) {
-            query.hackathon = hackathonId;
+        if (!hackathonId) {
+            return res.status(400).json({ message: "User ID is required" });
         }
-        const project = await Project.findOne(query);
+        const project = await Project.findOne({creator: userId, hackathon: hackathonId});
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
         }
@@ -29,10 +27,11 @@ router.get("/my-project", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        const { title, projectUrl, images, description, creator, hackathon } = req.body;
+        const { title, projectUrl, image, images, description, creator, hackathon } = req.body;
         const newProject = new Project({
             title,
             projectUrl,
+            image: image || null,
             images,
             description,
             creator,

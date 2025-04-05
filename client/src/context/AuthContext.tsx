@@ -7,6 +7,7 @@ interface User {
     name: string;
     email: string;
     walletAddress?: string;
+    points: number;
 }
 
 interface AuthContextType {
@@ -51,12 +52,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const register = async (fullName: string, email: string, password: string, address: string | null) => {
+    const register = async (name: string, email: string, password: string, address: string | null) => {
         try {
             const response = await fetch("http://localhost:5000/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ fullName, email, password, walletAddress: address }),
+                body: JSON.stringify({ name, email, password, walletAddress: address }),
             });
 
             const data = await response.json();

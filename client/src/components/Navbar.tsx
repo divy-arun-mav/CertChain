@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 const Navbar = () => {
     const location = useLocation();
-    const { isAuthenticated } = useAuth();
+    const { user, isAuthenticated } = useAuth();
     const { address, connectWallet } = useWeb3();
     return (
         <header className={`${location.pathname === '/auth' ? "hidden" : ""} px-5 sticky top-0 z-50 w-full border-b bg-gradient-to-r from-[rgba(0,150,255,0.5)] to-[rgba(0,168,232,0.5)] backdrop-blur supports-[backdrop-filter]:bg-opacity-70`}>
@@ -18,7 +18,7 @@ const Navbar = () => {
                 </div>
                 <nav>
                     {
-                        !isAuthenticated ? (
+                        isAuthenticated ? (
                             <div className="hidden md:flex gap-6">
                                 <Link to="/courses" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
                                     Courses
@@ -44,22 +44,23 @@ const Navbar = () => {
                                 <Link to="#features" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
                                     Features
                                 </Link>
-                                    <Link to="#how-it-works" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
-                                        How It Works
-                                    </Link>
-                                    <Link to="#benefits" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
-                                        Benefits
-                                    </Link>
-                                    <Link to="#faq" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
-                                        FAQ
-                                    </Link>
+                                <Link to="#how-it-works" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
+                                    How It Works
+                                </Link>
+                                <Link to="#benefits" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
+                                    Benefits
+                                </Link>
+                                <Link to="#faq" className="text-sm font-medium transition-colors text-white hover:border-b hover:border-b-white">
+                                    FAQ
+                                </Link>
                             </div>
                         )
                     }
                 </nav>
                 {
-                    !isAuthenticated ? (
-                        <div>
+                    isAuthenticated ? (
+                        <div className="w-max flex justify-center items-center">
+                            {user?.points && (<Link to="/leaderboard" className="text-white mr-8 w-max">{user.points}🏆</Link>)}
                             <Button onClick={!address ? connectWallet : async () => {
                                 if (!address) return;
                                 try {
@@ -69,28 +70,28 @@ const Navbar = () => {
                                     console.error("Failed to copy address:", err);
                                     toast.error("Failed to copy address. Please try manually.");
                                 }
-                            }} className="mt-2 w-full bg-blue-700 text-white hover:bg-blue-900">
+                            }} className="mt-2 w-max bg-blue-700 text-white hover:bg-blue-900">
                                 {address ? `${address.slice(0, 15)}...${address.slice(-4)}` : 'Connect Wallet'}
                             </Button>
                         </div>
                     ) : (
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="border-[#E0F7FA] text-white hover:bg-[#00A8E8] hover:text-white"
-                                    asChild
-                                >
-                                    <Link to="/auth">Log In</Link>
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    className="bg-[#0096FF] text-white hover:bg-[#00A8E8]"
-                                    asChild
-                                >
-                                    <Link to="/auth">Get Started</Link>
-                                </Button>
-                            </div>
+                        <div className="flex items-center gap-4">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-[#E0F7FA] text-white hover:bg-[#00A8E8] hover:text-white"
+                                asChild
+                            >
+                                <Link to="/auth">Log In</Link>
+                            </Button>
+                            <Button
+                                size="sm"
+                                className="bg-[#0096FF] text-white hover:bg-[#00A8E8]"
+                                asChild
+                            >
+                                <Link to="/auth">Get Started</Link>
+                            </Button>
+                        </div>
                     )
                 }
             </div>

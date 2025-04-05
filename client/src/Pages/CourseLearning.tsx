@@ -40,7 +40,7 @@ const CourseLearning = () => {
             .then((data) => {
                 setCourse(data);
                 if (data.modules.length > 0) {
-                    setSelectedModule(data.modules[0]); // Select first module by default
+                    setSelectedModule(data.modules[0]); 
                     setRandomImage(images[Math.floor(Math.random() * images.length)]);
                 }
             })

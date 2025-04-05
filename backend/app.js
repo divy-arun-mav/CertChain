@@ -25,6 +25,8 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/enroll", enrollmentRoutes);
 app.use("/api/hackathons", hackathonRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/leaderboard", require("./routes/leaderboardRoutes"));
+app.use("/api/update-points", require("./routes/pointRoutes"));
 
 app.post("/api/compile-contract", (req, res) => {
     const { sourceCode, contractName } = req.body;
@@ -63,7 +65,6 @@ app.post("/api/compile-contract", (req, res) => {
     }
 });
 
-// Gemini question generation
 app.post("/api/generate-questions", async (req, res) => {
     const { topic } = req.body;
 
@@ -125,7 +126,6 @@ app.post("/api/generate-questions", async (req, res) => {
     }
 });
 
-// Gemini Solidity contract generation
 app.post("/api/generate-solidity", async (req, res) => {
     const { field } = req.body;
     if (!field) {
@@ -178,39 +178,6 @@ app.post("/api/generate-solidity", async (req, res) => {
     } catch (error) {
         console.error("Error generating solidity code:", error);
         res.status(500).json({ error: "Failed to generate solidity code" });
-    }
-});
-
-// Dummy deploy route (mock)
-app.post("/api/deploy-contract", async (req, res) => {
-    const { code } = req.body;
-    if (!code) {
-        return res.status(400).json({ error: "Code is required for deployment" });
-    }
-    try {
-        const deploymentResult = {
-            address: "0x1234567890abcdef",
-            functions: [
-                {
-                    name: "mint",
-                    inputs: [
-                        { name: "to", type: "address", value: "" },
-                        { name: "amount", type: "uint256", value: "" }
-                    ],
-                },
-                {
-                    name: "transfer",
-                    inputs: [
-                        { name: "to", type: "address", value: "" },
-                        { name: "amount", type: "uint256", value: "" }
-                    ],
-                },
-            ],
-        };
-        res.json(deploymentResult);
-    } catch (error) {
-        console.error("Error deploying contract:", error);
-        res.status(500).json({ error: "Failed to deploy contract" });
     }
 });
 

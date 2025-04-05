@@ -3,7 +3,6 @@ import { ethers } from "ethers";
 
 const { ethereum } = window as any;
 
-// Deploy compiled contract to Ethereum using MetaMask, with optional constructor arguments.
 export async function deployToChain(
     abi: any,
     bytecode: string,
@@ -18,7 +17,6 @@ export async function deployToChain(
     const signer = provider.getSigner();
 
     const factory = new ethers.ContractFactory(abi, bytecode, signer);
-    // Pass constructor arguments if provided.
     const contract = await factory.deploy(...args);
     await contract.deployed();
 
@@ -26,8 +24,6 @@ export async function deployToChain(
     return contract.address;
 }
 
-// Handle deployment by passing ABI, bytecode, and optional constructor arguments.
-// Returns the contract address.
 export async function handleDeploy(
     abi: any,
     bytecode: string,

@@ -4,9 +4,9 @@ type CertificateProps = {
     certificate: {
         certificateHash: string;
         courseName: string;
-        issuedAt: number; // timestamp in ms
+        issuedAt: number;
         score: number;
-        student: string; // wallet address
+        student: string;
     };
 };
 
@@ -15,11 +15,9 @@ const CertificateCanvas = ({ certificate }: CertificateProps) => {
     const [studentName, setStudentName] = useState<string>("Student");
     const [loading, setLoading] = useState<boolean>(true);
 
-    // Update your image URLs as needed (ensure CORS is enabled if remote)
     const logoUrl = "/logo.jpg";
     const signatureUrl = "/sign.jpg";
 
-    // Fetch the student details (name) from the API using the wallet address
     useEffect(() => {
         const fetchStudentName = async () => {
             try {
@@ -37,7 +35,6 @@ const CertificateCanvas = ({ certificate }: CertificateProps) => {
         fetchStudentName();
     }, [certificate.student]);
 
-    // Draw certificate on canvas once certificate details and studentName are available
     useEffect(() => {
         if (loading) return;
         const canvas = canvasRef.current;
@@ -47,17 +44,14 @@ const CertificateCanvas = ({ certificate }: CertificateProps) => {
         const width = canvas.width;
         const height = canvas.height;
 
-        // Clear canvas before drawing
         ctx.clearRect(0, 0, width, height);
 
-        // Draw background and border
         ctx.fillStyle = "#FFFFFF";
         ctx.fillRect(0, 0, width, height);
         ctx.lineWidth = 8;
         ctx.strokeStyle = "#D1D5DB";
         ctx.strokeRect(0, 0, width, height);
 
-        // Helper function to draw centered text
         const drawCenteredText = (text: string, y: number, font: string, color = "#000") => {
             ctx.font = font;
             ctx.fillStyle = color;
@@ -70,7 +64,6 @@ const CertificateCanvas = ({ certificate }: CertificateProps) => {
         currentY += 50;
         drawCenteredText("This certificate is awarded to", currentY, "24px serif", "#000");
         currentY += 40;
-        // Use the fetched studentName instead of wallet address
         drawCenteredText(studentName, currentY, "bold 30px serif", "#000");
         currentY += 50;
 
@@ -98,7 +91,6 @@ const CertificateCanvas = ({ certificate }: CertificateProps) => {
         ctx.fillText("Credit Hours: 4 Hours", width - 50, currentY + 40);
         ctx.textAlign = "center";
 
-        // Draw images (logo and signature)
         const logo = new Image();
         const signature = new Image();
         logo.crossOrigin = "anonymous";

@@ -14,14 +14,13 @@ type Course = {
     image: string;
     category: string;
     duration: string;
-    // Add any additional course fields if needed
 };
 
 type Enrollment = {
     _id: string;
     studentAddress: string;
     certificate: string;
-    courseId: Course; // Nested course object
+    courseId: Course; 
     completed: boolean;
     enrolledAt: string;
     __v: number;
