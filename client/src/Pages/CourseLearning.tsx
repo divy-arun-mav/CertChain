@@ -124,7 +124,7 @@ const CourseLearning = () => {
                                             if (currentIndex < course.modules.length - 1) {
                                                 nextModule();
                                             } else {
-                                                navigate(`/test/${course.title}`);
+                                                navigate(`/test/${course.title}/${course._id}`);
                                             }
                                         }
                                     }}

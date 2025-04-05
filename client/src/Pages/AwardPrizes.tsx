@@ -45,10 +45,12 @@ const AwardPrizes: React.FC = () => {
     const { state } = useLocation();
     const hackathon = state as Hackathon;
     const navigate = useNavigate();
-
+    
     const [selectedWinners, setSelectedWinners] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(false);
 
+    const end = Object.keys(selectedWinners).length > 0 ? false : true;
+    
     const handleWinnerChange = (prizeId: string, participantId: string) => {
         setSelectedWinners((prev) => ({
             ...prev,
@@ -195,7 +197,7 @@ const AwardPrizes: React.FC = () => {
             <Button
                 className="mt-10 bg-green-600 text-white hover:bg-green-700 px-6 py-2 rounded"
                 onClick={awardPrizes}
-                disabled={loading}
+                disabled={loading || end}
             >
                 {loading ? "Processing..." : "Award & End Hackathon"}
             </Button>

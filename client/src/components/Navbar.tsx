@@ -60,7 +60,7 @@ const Navbar = () => {
                 {
                     isAuthenticated ? (
                         <div className="w-max flex justify-center items-center">
-                            {user?.points && (<Link to="/leaderboard" className="text-white mr-8 w-max">{user.points}🏆</Link>)}
+                            {user?.points && user.points > 0 ? (<Link to="/leaderboard" className="text-white mr-8 w-max">{user.points}🏆</Link>) : null}
                             <Button onClick={!address ? connectWallet : async () => {
                                 if (!address) return;
                                 try {

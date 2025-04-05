@@ -91,7 +91,7 @@ const HackathonCreator = () => {
             const data = await res.json();
             if (res.ok) {
                 toast.success("Hackathon created successfully!");
-                navigate("/creator/dashboard");
+                navigate("/my-hackathons");
             } else {
                 console.error(data.message);
                 toast.error(data.message || "Failed to create hackathon.");

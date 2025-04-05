@@ -61,10 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             });
 
             const data = await response.json();
-            if (response.ok) {
-                localStorage.setItem("token", data.token);
-                setIsAuthenticated(true);
-            } else {
+            if (!response.ok) {
                 throw new Error(data.message || "Registration failed");
             }
         } catch (error) {

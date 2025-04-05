@@ -36,7 +36,7 @@ function App() {
         <Route path="/courses/completed" element={<CompletedCourses />} />
         <Route path="/enrolled/:studentAddress" element={<EnrolledCourses />} />
         <Route path="/learn/:courseId" element={<CourseLearning />} />
-        <Route path="/test/:topic" element={<StudentTest />} />
+        <Route path="/test/:topic/:courseId" element={<StudentTest />} />
         <Route path="/certificates" element={<Certificates />} />
         <Route path="/certificate/:id" element={<Cerificate />} />
         <Route path="/achievments" element={<Acheivements />} />

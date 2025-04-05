@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
+const { assignRole } = require("../web3/assignRole");
+
 
 const router = express.Router();
 
@@ -32,6 +34,9 @@ router.post(
 
             const hashedPassword = await bcrypt.hash(password, 10);
             user = new User({ name, email, password: hashedPassword, walletAddress });
+
+            const role = assignRole(walletAddress);
+            console.log(role);
 
             await user.save();
             res.status(201).json({ message: "User registered successfully" });

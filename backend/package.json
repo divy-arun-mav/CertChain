@@ -93,6 +93,7 @@
     "unpipe": "^1.0.0",
     "utils-merge": "^1.0.1",
     "vary": "^1.1.2",
+    "web3": "^1.10.0",
     "webidl-conversions": "^7.0.0",
     "whatwg-url": "^14.2.0"
   },

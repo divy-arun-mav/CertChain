@@ -30,6 +30,28 @@ router.post("/:courseId", async (req, res) => {
     }
 });
 
+router.put("/complete/:courseId/:studentAddress/:certificateHash", async (req, res) => {
+    try {
+        const { courseId, studentAddress, certificateHash } = req.params;
+
+        const enrollment = await Enrollment.findOne({ courseId, studentAddress });
+
+        if (!enrollment) {
+            return res.status(404).json({ error: "Enrollment not found" });
+        }
+
+        enrollment.completed = true;
+        enrollment.certificate = certificateHash;
+
+        await enrollment.save();
+
+        res.status(200).json({ message: "Course marked as complete with certificate." });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 
 router.get("/:studentAddress", async (req, res) => {
     try {

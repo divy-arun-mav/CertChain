@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { useWeb3 } from "@/context/Web3";
 import { extractCorrectAnswer } from "@/utils/AnswerExtracter";
-import { useState, useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -17,16 +17,18 @@ interface Question {
 }
 
 const StudentTest = () => {
-    const { topic } = useParams<{ topic: string }>();
+    const { topic, courseId } = useParams<{ topic: string, courseId: string }>();
     const [questions, setQuestions] = useState<Question[]>([]);
     const [answers, setAnswers] = useState<Record<number, string>>({});
-    const [submitted, setSubmitted] = useState<boolean>(false);
-    const [score, setScore] = useState<number>(0);
+    const [submitted, setSubmitted] = useState(false);
+    const [score, setScore] = useState(0);
     const [incorrectAnswers, setIncorrectAnswers] = useState<Record<number, string>>({});
-    const [devToolsDetected, setDevToolsDetected] = useState<boolean>(false);
+    const [devToolsDetected, setDevToolsDetected] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(600);
     const { state, address } = useWeb3();
     const { user } = useAuth();
     const navigate = useNavigate();
+    const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -51,24 +53,25 @@ const StudentTest = () => {
         const percentage = correct * 10;
         if (percentage < 90) return;
         toast.success("You are now eligible to issue certificate for " + topic);
-        if (!state?.educhaincontract) {
-            console.log("contract not found");
-            return;
-        }
+        if (!state?.educhaincontract) return;
         try {
             const tx = await state.educhaincontract.issueCertificate(address, topic, correct * 100);
-            console.log("Certificate issued successfully!", tx);
             toast.success("Certificate issued successfully!");
+            return tx;
         } catch (err) {
             console.error("Error issuing certificate:", err);
         }
     };
 
-    useEffect(() => {
-        if (localStorage.getItem("devtools-opened") === "true") {
-            resetTest();
-        }
-    }, []);
+    const resetTest = () => {
+        setQuestions([]);
+        setAnswers({});
+        setSubmitted(false);
+        setScore(0);
+        setIncorrectAnswers({});
+        setDevToolsDetected(true);
+        alert("Test has been reset due to security policy!");
+    };
 
     useEffect(() => {
         const detectDevTools = () => {
@@ -96,29 +99,8 @@ const StudentTest = () => {
         resetTest();
     };
 
-    const resetTest = () => {
-        setQuestions([]);
-        setAnswers({});
-        setSubmitted(false);
-        setScore(0);
-        setIncorrectAnswers({});
-        setDevToolsDetected(true);
-        alert("Test has been reset due to security policy!");
-    };
-
-    const testReset = () => {
-        setQuestions([]);
-        setAnswers({});
-        setSubmitted(false);
-        setScore(0);
-        setIncorrectAnswers({});
-    };
-
-    const handleSelect = (questionId: number, answer: string) => {
-        setAnswers((prev) => ({ ...prev, [questionId]: answer }));
-    };
-
     const handleSubmit = async () => {
+        if (submitted) return;
         setSubmitted(true);
         let correct = 0;
         const incorrectAnswersMap: Record<number, string> = {};
@@ -126,7 +108,6 @@ const StudentTest = () => {
         questions.forEach((q) => {
             const correctAnswer = extractCorrectAnswer(q);
             const givenAnswer = answers[q.id];
-
             if (givenAnswer) {
                 const processedGiven = givenAnswer.replace(/Option\s+[A-D][\):]\s*/, "").trim();
                 if (processedGiven.toLowerCase() === correctAnswer.toLowerCase()) {
@@ -139,7 +120,11 @@ const StudentTest = () => {
 
         setScore(correct);
         setIncorrectAnswers(incorrectAnswersMap);
-        await issueCertificate(correct);
+        const certificate = await issueCertificate(correct);
+        console.log(certificate);
+        await fetch(`http://localhost:5000/api/enroll/complete/${courseId}/${address}/${certificate.hash}`, {
+            method: "PUT"
+        });
         await fetch(`http://localhost:5000/api/update-points`, {
             method: "POST",
             headers: {
@@ -152,16 +137,98 @@ const StudentTest = () => {
             }),
         });
         toast.success("You gained 40 points for completing the course!");
-        navigate('/certificates');
+        navigate("/certificates");
+    };
+
+    useEffect(() => {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(console.error);
+        }
+
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).catch((err) => {
+            alert("Camera/Microphone access is required.");
+            console.error(err);
+        });
+
+        const keyHandler = (e: KeyboardEvent) => {
+            if (e.key === "F11" || (e.ctrlKey)) {
+                e.preventDefault();
+                alert("This action is disabled during the test.");
+            }
+        };
+
+        const mouseHandler = (e: MouseEvent) => {
+            if (e.ctrlKey && e.button === 0) {
+                e.preventDefault();
+                alert("Ctrl+Click is disabled!");
+            }
+        };
+
+        const blurHandler = () => {
+            alert("Tab switch detected! Test will be reset.");
+            resetTest();
+        };
+
+        window.addEventListener("keydown", keyHandler);
+        window.addEventListener("mousedown", mouseHandler);
+        window.addEventListener("blur", blurHandler);
+
+        timerRef.current = setInterval(() => {
+            setTimeLeft((prev) => {
+                if (prev <= 1) {
+                    clearInterval(timerRef.current);
+                    handleSubmit();
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => {
+            window.removeEventListener("keydown", keyHandler);
+            window.removeEventListener("mousedown", mouseHandler);
+            window.removeEventListener("blur", blurHandler);
+            clearInterval(timerRef.current);
+        };
+    }, []);
+
+    const formatTime = (seconds: number) => {
+        const min = Math.floor(seconds / 60)
+            .toString()
+            .padStart(2, "0");
+        const sec = (seconds % 60).toString().padStart(2, "0");
+        return `${min}:${sec}`;
+    };
+
+    const handleSelect = (questionId: number, answer: string) => {
+        setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+    };
+
+    const testReset = () => {
+        setQuestions([]);
+        setAnswers({});
+        setSubmitted(false);
+        setScore(0);
+        setIncorrectAnswers({});
+        setTimeLeft(600);
     };
 
     if (devToolsDetected) {
-        return <h1 className="text-red-500 text-center mt-20 text-2xl font-bold">Test has been reset due to security policy.</h1>;
+        return (
+            <h1 className="text-red-500 text-center mt-20 text-2xl font-bold">
+                Test has been reset due to security policy.
+            </h1>
+        );
     }
 
     return (
         <div className="w-screen min-h-screen bg-gray-900 text-white p-8">
-            <h2 className="text-3xl font-bold text-[#00A8E8]">Course Test</h2>
+            <div className="flex justify-between items-center">
+                <h2 className="text-3xl font-bold text-[#00A8E8]">Course Test</h2>
+                <div className="text-lg bg-black px-4 py-1 rounded-lg border border-white">
+                    Time Left: <span className="font-bold text-red-400">{formatTime(timeLeft)}</span>
+                </div>
+            </div>
             <p className="text-gray-400 mb-6">Answer the following questions:</p>
 
             {submitted ? (
@@ -184,7 +251,8 @@ const StudentTest = () => {
                                         return (
                                             <label
                                                 key={option}
-                                                className={`block cursor-pointer ${isCorrect ? "text-red-400" : isWrongSelected ? "text-green-400" : ""}`}
+                                                className={`block cursor-pointer ${isCorrect ? "text-red-400" : isWrongSelected ? "text-green-400" : ""
+                                                    }`}
                                             >
                                                 <input
                                                     type="radio"
@@ -249,7 +317,6 @@ const StudentTest = () => {
             )}
         </div>
     );
-
 };
 
 export default StudentTest;

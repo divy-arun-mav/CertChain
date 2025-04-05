@@ -70,7 +70,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         const educhaincontractAddress = import.meta.env.VITE_EDUCHAINCERTIFICATIONS_CONTRACT_ADDRESS;
         const studygroupcontractAddress = import.meta.env.VITE_STUDYGROUP_CONTRACT_ADDRESS;
         const studytrackercontractAddress = import.meta.env.VITE_STUDYTRACKER_CONTRACT_ADDRESS;
-        // const hackathonbadgecontractAddress = import.meta.env.VVITE_HACKATHONBADGE_CONTRACT_ADDRESS;
+        // const hackathonbadgecontractAddress = import.meta.env.VITE_HACKATHONBADGE_CONTRACT_ADDRESS;
 
         
         try {

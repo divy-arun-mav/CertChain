@@ -33,7 +33,7 @@ const Hackathons = () => {
     useEffect(() => {
         fetch("http://localhost:5000/api/hackathons")
             .then((res) => res.json())
-            .then((data) => setHackathons(data.hackathons));
+            .then((data) => setHackathons(data.hackathons.reverse()));
     }, []);
 
     return (

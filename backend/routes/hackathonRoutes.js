@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
     try {
-        const { title, description, theme, startDate, endDate, creator, prizes } = req.body;
+        const { title, description, theme, image, startDate, endDate, creator, prizes } = req.body;
         const hackathon = new Hackathon({
             title,
             description,
