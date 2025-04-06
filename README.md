@@ -51,27 +51,27 @@ CertChain is a decentralized certificate management platform that leverages bloc
 
   1. Use Case Diagram:
      
-  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/1.png)
+  ![image](https://raw.githubusercontent.com/divy-arun-mav/CertChain/refs/heads/main/client/public/images/1.png)
 
   2. Components Diagram:
      
-  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/2.png)
+  ![image](https://raw.githubusercontent.com/divy-arun-mav/CertChain/refs/heads/main/client/public/images/2.png)
 
   3. Sequence Diagram:
      
-  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/3.png)
+  ![image](https://raw.githubusercontent.com/divy-arun-mav/CertChain/refs/heads/main/client/public/images/3.png)
 
   4. Activity Diagram:
-     
-  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/4.png)
+
+  ![image](https://raw.githubusercontent.com/divy-arun-mav/CertChain/refs/heads/main/client/public/images/4.png)
 
   5. Sequence Diagram :
      
-  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/5.png)
+  ![image](https://raw.githubusercontent.com/divy-arun-mav/CertChain/refs/heads/main/client/public/images/5.png)
 
   6. CodeBase Diagram:
      
-  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/6.png)
+  ![image](https://raw.githubusercontent.com/divy-arun-mav/CertChain/refs/heads/main/client/public/images/6.png)
 
 
 ---
