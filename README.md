@@ -47,6 +47,157 @@ CertChain is a decentralized certificate management platform that leverages bloc
 
 ---
 
+## Project Architecture: 
+
+  1. Use Case Diagram:
+     
+  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/1.png)
+
+  2. Components Diagram:
+     
+  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/2.png)
+
+  3. Sequence Diagram:
+     
+  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/3.png)
+
+  4. Activity Diagram:
+     
+  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/4.png)
+
+  5. Sequence Diagram :
+     
+  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/5.png)
+
+  6. CodeBase Diagram:
+     
+  ![image](https://github.com/divy-arun-mav/CertChain/blob/master/public/images/6.png)
+
+
+---
+
+# CertChain Image Gallery
+
+### All Courses :
+![All Courses](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/All%20Courses.png)
+
+### All Hackathons :
+![All Hackathons](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/All%20Hackathons.png)
+
+### All Hackathons and Validation to Create Hackathon :
+![All hackathons and validation to create hackathon](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/All%20hackathons%20and%20validation%20to%20create%20hackathon.png)
+
+### Auth Login :
+![Auth Login](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Auth-Login.png)
+
+### Auth Register :
+![Auth Register](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Auth-Register.png)
+
+### Auth Logout :
+![Auth Logout](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Auth-logout.png)
+
+### Certificate :
+![Certificate](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Certificate.png)
+
+### Course Details and Enrollment :
+![Course Details and Enrollment](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Course%20Details%20and%20enrollment.png)
+
+### Course Learning :
+![Course Learning](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Course%20Learning.png)
+
+### Course Test and Cheating Detection :
+![Course Test and Cheating Detection](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Course%20Test%20and%20cheating%20detection.png)
+
+### Hackathon Details 1 :
+![Hackathon Details 1](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Hackathon%20Details%201.png)
+
+### Hackathon Creator Award Prizes :
+![Hackathon Creator Award Prizes](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Hackathon%20creator%20award%20prizes.png)
+
+### Leaderboard :
+![Leaderboard](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Leaderboard.png)
+
+### Participated Hackathons :
+![Participated Hackathons](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/Participated%20Hackathons.png)
+
+### All Valid Certificates :
+![All Valid Certificates](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/all%20valid%20certificates.png)
+
+### Compiling and Deploying Smart Contract on Edu Chain :
+![Compiling and Deploying Smart Contract on Edu Chain](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/compiling%20and%20deploying%20smart%20contract%20on%20edu%20chain.png)
+
+### Completed Courses :
+![Completed Courses](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/completed%20courses.png)
+
+### Create Hackathon 1 :
+![Create Hackathon 1](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/create%20hackathon%201.png)
+
+### Create Hackathon :
+![Create Hackathon](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/create%20hackathon.png)
+
+### Create Project :
+![Create Project](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/create%20project.png)
+
+### Creating and Submitting Project for Hackathon :
+![Creating and Submitting Project for Hackathon](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/creating%20and%20submitting%20project%20for%20hackathon.png)
+
+### Enrolled Courses :
+![Enrolled Courses](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/enrolled%20courses.png)
+
+### Hackathon Dashboard for Creator and Project Details 1 :
+![Hackathon Dashboard for Creator and Project Details 1](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/hackathon%20dashboard%20for%20creator%20and%20project%20details%201.png)
+
+### Hackathon Dashboard for Creator :
+![Hackathon Dashboard for Creator](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/hackathon%20dashboard%20for%20creator.png)
+
+### Hackathon Details 2 :
+![Hackathon Details 2](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/hackathon%20details%202.png)
+
+### Interacting with Smart Contract Through App 2 :
+![Interacting with Smart Contract Through App 2](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/interacting%20with%20smart%20contract%20through%20app%202.png)
+
+### Interacting with Smart Contract Through App 3 :
+![Interacting with Smart Contract Through App 3](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/interacting%20with%20smart%20contract%20through%20app%203.png)
+
+### Interacting with Smart Contract Through App 4 :
+![Interacting with Smart Contract Through App 4](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/interacting%20with%20smart%20contract%20through%20app%204.png)
+
+### Interacting with Smart Contract Through App 5 :
+![Interacting with Smart Contract Through App 5](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/interacting%20with%20smart%20contract%20through%20app%205.png)
+
+### Interacting with Smart Contract Through App :
+![Interacting with Smart Contract Through App](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/interacting%20with%20smart%20contract%20through%20app.png)
+
+### My Created Hackathon :
+![My Created Hackathon](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/my%20created%20hackathon.png)
+
+### Project Details :
+![Project Details](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/project%20details.png)
+
+### Project Images 2 :
+![Project Images 2](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/project%20images%202.png)
+
+### Project Images :
+![Project Images](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/project%20images.png)
+
+### Real Like Readme and Rich Text Editor :
+![Real Like Readme and Rich Text Editor](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/real%20like%20readme%20and%20rich%20text%20editor.png)
+
+### Smart Contract Details Deployment on Edu Chain :
+![Smart Contract Details Deployment on Edu Chain](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/smart%20contract%20details%20deployment%20on%20edu%20chain.png)
+
+### Smart Contract Factory, Generating Code Through AI :
+![Smart Contract Factory, Generating Code Through AI](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/smart%20contract%20factory,%20generating%20code%20through%20AI.png)
+
+### Submitting Project :
+![Submitting Project](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/submitting%20project.png)
+
+### User Achievements :
+![User Achievements](https://github.com/divy-arun-mav/CertChain/raw/main/client/public/images/user%20achivements.png)
+
+
+---
+
 ## 📁 Project Structure
 
 ```sh
