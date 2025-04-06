@@ -757,8 +757,8 @@ To run tests for the application, execute the following from the relevant folder
 ## 📌 Project Roadmap
 
 - [X] **Task 1:** Complete the core blockchain integration and certificate issuance feature.
-- [ ] **Task 2:** Implement advanced verification and audit trails.
-- [ ] **Task 3:** Integrate additional blockchain networks and expand mobile support.
+- [X] **Task 2:** Implement advanced verification and audit trails.
+- [X] **Task 3:** Integrate additional blockchain networks and expand mobile support.
 
 ---
 
@@ -802,12 +802,6 @@ To run tests for the application, execute the following from the relevant folder
    </a>
 </p>
 </details>
-
----
-
-## 🎗 License
-
-This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/). For further details, see the [LICENSE](https://choosealicense.com/licenses/mit/) file.
 
 ---
 
