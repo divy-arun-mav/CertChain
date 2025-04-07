@@ -31,7 +31,7 @@ const Hackathons = () => {
     }
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/hackathons")
+        fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons`)
             .then((res) => res.json())
             .then((data) => setHackathons(data.hackathons.reverse()));
     }, []);

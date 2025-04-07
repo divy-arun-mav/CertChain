@@ -59,7 +59,7 @@ const CreatorDashboard: React.FC = () => {
         const fetchCreatedHackathons = async () => {
             if (!user?._id) return;
             try {
-                const response = await fetch(`http://localhost:5000/api/hackathons/creator/${user._id}`);
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/creator/${user._id}`);
                 const data = await response.json();
                 setHackathons(data.hackathons || []);
             } catch (error) {
@@ -76,7 +76,7 @@ const CreatorDashboard: React.FC = () => {
 
     const handleEndHackathon = async (id: string) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/hackathons/end/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/end/${id}`, {
                 method: "POST",
             });
             const data = await response.json();

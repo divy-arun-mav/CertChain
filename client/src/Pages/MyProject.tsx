@@ -44,7 +44,7 @@ const MyProject = () => {
         const fetchProject = async () => {
             if (!user) return;
             try {
-                const endpoint = `http://localhost:5000/api/projects/my-project?userId=${user._id}&hackathonId=${hackathonId}`;
+                const endpoint = `${import.meta.env.VITE_BACKEND_URI}/api/projects/my-project?userId=${user._id}&hackathonId=${hackathonId}`;
                 const res = await fetch(endpoint, {
                     headers: { "Content-Type": "application/json" },
                 });
@@ -111,7 +111,7 @@ const MyProject = () => {
                 ...(hackathonId && { hackathon: hackathonId }),
             };
 
-            const res = await fetch("http://localhost:5000/api/projects", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/projects`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

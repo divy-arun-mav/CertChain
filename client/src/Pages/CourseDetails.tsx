@@ -35,7 +35,7 @@ const CourseDetails = () => {
     useEffect(() => {
         const fetchCourse = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/courses/${id}`);
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/courses/${id}`);
                 if (!res.ok) throw new Error("Failed to fetch course");
 
                 const data = await res.json();
@@ -53,7 +53,7 @@ const CourseDetails = () => {
     useEffect(() => {
         const checkEnrollment = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/enroll/status/${id}?address=${address}`);
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/enroll/status/${id}?address=${address}`);
                 if (!res.ok) return;
 
                 const data = await res.json();
@@ -70,7 +70,7 @@ const CourseDetails = () => {
         if (!id) return toast.error("Course ID not provided");
 
         try {
-            const res = await fetch(`http://localhost:5000/api/enroll/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/enroll/${id}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ studentAddress: address }),

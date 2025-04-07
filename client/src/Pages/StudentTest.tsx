@@ -33,7 +33,7 @@ const StudentTest = () => {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const response = await fetch("http://localhost:5000/api/generate-questions", {
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/generate-questions`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ topic }),
@@ -122,10 +122,10 @@ const StudentTest = () => {
         setIncorrectAnswers(incorrectAnswersMap);
         const certificate = await issueCertificate(correct);
         console.log(certificate);
-        await fetch(`http://localhost:5000/api/enroll/complete/${courseId}/${address}/${certificate.hash}`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/enroll/complete/${courseId}/${address}/${certificate.hash}`, {
             method: "PUT"
         });
-        await fetch(`http://localhost:5000/api/update-points`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/update-points`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

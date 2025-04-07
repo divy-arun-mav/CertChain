@@ -24,7 +24,7 @@ const CreatedHacks = () => {
         const fetchHackathons = async () => {
             if (!user?._id) return;
             try {
-                const res = await fetch(`http://localhost:5000/api/hackathons/creator/${user._id}`);
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/creator/${user._id}`);
                 const data = await res.json();
                 setHackathons(data.hackathons || []);
             } catch (error) {
@@ -37,7 +37,7 @@ const CreatedHacks = () => {
 
     const handleEnd = async (id: string) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/hackathons/end/${id}`, { method: "POST" });
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/end/${id}`, { method: "POST" });
             const data = await res.json();
             alert(data.message);
             setHackathons((prev) =>

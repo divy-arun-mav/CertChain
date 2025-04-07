@@ -28,7 +28,7 @@ const Achievements: React.FC = () => {
     const fetchAchievements = async () => {
       if (!user?._id) return;
       try {
-        const res = await fetch(`http://localhost:5000/api/hackathons/${user._id}/achievements`);
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/${user._id}/achievements`);
         const data = await res.json();
         setAchievements(data);
       } catch (err) {

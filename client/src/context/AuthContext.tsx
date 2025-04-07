@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const login = async (email: string, password: string, address: string | null) => {
         try {
-            const response = await fetch("http://localhost:5000/api/auth/login", {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password, walletAddress: address }),
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const register = async (name: string, email: string, password: string, address: string | null) => {
         try {
-            const response = await fetch("http://localhost:5000/api/auth/register", {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, password, walletAddress: address }),
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchStudent = useCallback(async () => {
         try {
-            const res = await fetch(`http://localhost:5000/api/auth/user/${address}`);
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/user/${address}`);
             const data = await res.json();
             if (data.user && data.user.name) {
                 setUser(data.user);

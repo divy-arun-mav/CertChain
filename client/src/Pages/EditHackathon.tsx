@@ -44,7 +44,7 @@ const EditHackathon: React.FC = () => {
         if (!hackathon) return;
 
         try {
-            const res = await fetch(`http://localhost:5000/api/hackathons/${hackathon._id}`, {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/${hackathon._id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(hackathon),

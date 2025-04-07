@@ -110,7 +110,7 @@ contract HelloWorld {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('http://localhost:5000/api/generate-solidity', {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/generate-solidity`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ field: contractDetail }),
@@ -139,7 +139,7 @@ contract HelloWorld {
                 return;
             }
             const contractName = contractNameMatch[1];
-            const res = await fetch('http://localhost:5000/api/compile-contract', {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/compile-contract`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sourceCode: generatedCode, contractName }),

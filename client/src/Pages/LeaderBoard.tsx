@@ -19,7 +19,7 @@ const Leaderboard: React.FC = () => {
         setLoading(true);
         setError("");
         try {
-            const res = await fetch("http://localhost:5000/api/leaderboard");
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/leaderboard`);
             if (!res.ok) throw new Error("Failed to fetch leaderboard");
 
             const data = await res.json();

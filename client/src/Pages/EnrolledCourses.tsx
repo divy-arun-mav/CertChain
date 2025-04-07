@@ -29,7 +29,7 @@ const EnrolledCourses = () => {
     useEffect(() => {
         if (!studentAddress) return;
 
-        fetch(`http://localhost:5000/api/enroll/${studentAddress}`)
+        fetch(`${import.meta.env.VITE_BACKEND_URI}/api/enroll/${studentAddress}`)
             .then((res) => res.json())
             .then((data) => {
                 const courses = data.map((enrollment: any) => enrollment.courseId);

@@ -21,7 +21,7 @@ const CertificateCanvas = ({ certificate }: CertificateProps) => {
     useEffect(() => {
         const fetchStudentName = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/auth/user/${certificate.student}`);
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/user/${certificate.student}`);
                 const data = await res.json();
                 if (data.user && data.user.name) {
                     setStudentName(data.user.name);

@@ -69,7 +69,7 @@ const HackathonDetail = () => {
         const checkIfJoined = async () => {
             try {
                 const res = await fetch(
-                    `http://localhost:5000/api/hackathons/joined/${hackathon._id}`,
+                    `${import.meta.env.VITE_BACKEND_URI}/api/hackathons/joined/${hackathon._id}`,
                     {
                         method: "POST",
                         headers: {
@@ -104,7 +104,7 @@ const HackathonDetail = () => {
         setJoinError("");
         try {
             const res = await fetch(
-                `http://localhost:5000/api/hackathons/join/${hackathon._id}`,
+                `${import.meta.env.VITE_BACKEND_URI}/api/hackathons/join/${hackathon._id}`,
                 {
                     method: "POST",
                     headers: {

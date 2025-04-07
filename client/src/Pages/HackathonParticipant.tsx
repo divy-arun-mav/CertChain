@@ -15,7 +15,7 @@ const HackathonParticipant = () => {
     useEffect(() => {
         const fetchHackathons = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/hackathons");
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons`);
                 const data = await res.json();
                 setHackathons(data);
             } catch (error) {
@@ -27,7 +27,7 @@ const HackathonParticipant = () => {
 
     const handleJoin = async (id: string) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/hackathons/join/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/join/${id}`, {
                 method: "POST",
             });
             if (res.ok) {

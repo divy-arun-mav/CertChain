@@ -26,7 +26,7 @@ const Courses = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/courses")
+        fetch(`${import.meta.env.VITE_BACKEND_URI}/api/courses`)
             .then((res) => res.json())
             .then((data) => setCourses(data));
     }, []);

@@ -79,7 +79,7 @@ const AwardPrizes: React.FC = () => {
                 return;
             }
 
-            const res = await fetch(`http://localhost:5000/api/hackathons/award-multiple-prizes/${hackathon._id}`, {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/award-multiple-prizes/${hackathon._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const AwardPrizes: React.FC = () => {
 
             if (!res.ok) throw new Error("Failed to award prizes");
 
-            await fetch(`http://localhost:5000/api/hackathons/end/${hackathon._id}`, {
+            await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/end/${hackathon._id}`, {
                 method: "POST",
             });
 
@@ -97,7 +97,7 @@ const AwardPrizes: React.FC = () => {
                 const winnerId = prize.winner;
                 if (!winnerId) continue;
 
-                await fetch(`http://localhost:5000/api/update-points`, {
+                await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/update-points`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
