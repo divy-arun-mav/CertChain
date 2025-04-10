@@ -6,6 +6,7 @@ import SolidityEditor from '@/components/SolidityEditor';
 import { handleDeploy, getContractInstance } from '@/utils/ContractUtils';
 import toast from 'react-hot-toast';
 import { Contract } from 'ethers';
+import { useAuth } from '@/context/AuthContext';
 
 const formatResult = (res: any): string => {
     if (res == null) return "";
@@ -105,14 +106,18 @@ contract HelloWorld {
     const [compileResult, setCompileResult] = useState<any>(null);
     const [constructorInputs, setConstructorInputs] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const { token } = useAuth();
 
     const handleGenerate = async () => {
         setLoading(true);
         setError(null);
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/generate-solidity`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ field: contractDetail }),
             });
             const data = await res.json();
@@ -140,8 +145,11 @@ contract HelloWorld {
             }
             const contractName = contractNameMatch[1];
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/compile-contract`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ sourceCode: generatedCode, contractName }),
             });
             const data = await res.json();

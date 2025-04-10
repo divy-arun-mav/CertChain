@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthContext";
 import React, { useEffect, useState } from "react";
 
 type Hackathon = {
@@ -11,11 +12,17 @@ type Hackathon = {
 
 const HackathonParticipant = () => {
     const [hackathons, setHackathons] = useState<Hackathon[]>([]);
+    const { token } = useAuth();
 
     useEffect(() => {
         const fetchHackathons = async () => {
             try {
-                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons`);
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons`, {
+                    method: 'GET',
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
                 const data = await res.json();
                 setHackathons(data);
             } catch (error) {
@@ -23,12 +30,15 @@ const HackathonParticipant = () => {
             }
         };
         fetchHackathons();
-    }, []);
+    }, [token]);
 
     const handleJoin = async (id: string) => {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/join/${id}`, {
                 method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
             if (res.ok) {
                 alert("You have joined the hackathon!");

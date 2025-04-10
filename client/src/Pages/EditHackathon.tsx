@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 
 interface Prize {
     _id?: string;
@@ -25,6 +26,7 @@ interface Hackathon {
 
 const EditHackathon: React.FC = () => {
     const { state } = useLocation();
+    const { token } = useAuth();
     const navigate = useNavigate();
     const [hackathon, setHackathon] = useState<Hackathon | null>(null);
 
@@ -46,7 +48,10 @@ const EditHackathon: React.FC = () => {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/${hackathon._id}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(hackathon),
             });
 

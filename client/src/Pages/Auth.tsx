@@ -33,13 +33,21 @@ export default function Auth() {
 
         try {
             if (isRegister) {
-                await register(formData.fullName, formData.email, formData.password, address);
-                setIsRegister(false);
-                toast.success("Account created successfully!");
+                const res = await register(formData.fullName, formData.email, formData.password, address);
+                if (res === 1) {
+                    setIsRegister(false);
+                    toast.success("Account created successfully!");
+                } else {
+                    toast.error("Failed to create account!");
+                }
             } else {
-                await login(formData.email, formData.password, address);
-                navigate(`/enrolled/${address}`);
-                toast.success("Logged in successfully!");
+                const res = await login(formData.email, formData.password, address);
+                if (res === 1) {
+                    navigate(`/enrolled/${address}`);
+                    toast.success("Logged in successfully!");
+                } else {
+                    toast.error("Failed to log in!");
+                }
             }
         } catch (error) {
             console.error(error);

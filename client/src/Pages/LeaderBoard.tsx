@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 interface LeaderboardEntry {
     name: string;
@@ -14,12 +15,18 @@ const Leaderboard: React.FC = () => {
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const { token } = useAuth();
 
-    const fetchLeaderboard = async () => {
+    const fetchLeaderboard = useCallback(async () => {
         setLoading(true);
         setError("");
         try {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/leaderboard`);
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/leaderboard`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             if (!res.ok) throw new Error("Failed to fetch leaderboard");
 
             const data = await res.json();
@@ -29,11 +36,11 @@ const Leaderboard: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    },[token]);
 
     useEffect(() => {
         fetchLeaderboard();
-    }, []);
+    }, [fetchLeaderboard, token]);
 
     return (
         <div className="w-screen p-6 text-white min-h-screen bg-black">

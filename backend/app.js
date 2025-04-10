@@ -2,13 +2,17 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 const solc = require("solc");
 const authRoutes = require("./routes/authRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const enrollmentRoutes = require("./routes/enrollmentRoutes");
 const hackathonRoutes = require("./routes/hackathonRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const leaderboardRoutes = require("./routes/leaderboardRoutes");
+const pointRoutes = require("./routes/pointRoutes");
 const Course = require("./models/Course");
+const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -21,14 +25,14 @@ mongoose
     .catch((err) => console.error("MongoDB connection error:", err));
 
 app.use("/api/auth", authRoutes);
-app.use("/api/courses", courseRoutes);
-app.use("/api/enroll", enrollmentRoutes);
-app.use("/api/hackathons", hackathonRoutes);
-app.use("/api/projects", projectRoutes);
-app.use("/api/leaderboard", require("./routes/leaderboardRoutes"));
-app.use("/api/update-points", require("./routes/pointRoutes"));
+app.use("/api/courses", authMiddleware, courseRoutes);
+app.use("/api/enroll", authMiddleware, enrollmentRoutes);
+app.use("/api/hackathons", authMiddleware, hackathonRoutes);
+app.use("/api/projects", authMiddleware, projectRoutes);
+app.use("/api/leaderboard", authMiddleware, leaderboardRoutes);
+app.use("/api/update-points", authMiddleware, pointRoutes);
 
-app.post("/api/compile-contract", (req, res) => {
+app.post("/api/compile-contract", authMiddleware, (req, res) => {
     const { sourceCode, contractName } = req.body;
 
     const input = {
@@ -65,7 +69,7 @@ app.post("/api/compile-contract", (req, res) => {
     }
 });
 
-app.post("/api/generate-questions", async (req, res) => {
+app.post("/api/generate-questions", authMiddleware, async (req, res) => {
     const { topic } = req.body;
 
     const course = await Course.findOne({ title: topic });
@@ -126,7 +130,7 @@ app.post("/api/generate-questions", async (req, res) => {
     }
 });
 
-app.post("/api/generate-solidity", async (req, res) => {
+app.post("/api/generate-solidity", authMiddleware, async (req, res) => {
     const { field } = req.body;
     if (!field) {
         return res.status(400).json({ error: "Field is required" });
@@ -195,3 +199,7 @@ const parseGeminiResponse = (text) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.use("*", (req, res) => {
+    res.status(400).sendFile(path.join(__dirname, "404.html"));
+});

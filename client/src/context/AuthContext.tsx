@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useEffect, useContext, ReactNode, useCallback } from "react";
 import { useWeb3 } from "./Web3";
+import { useNavigate } from "react-router-dom";
 
 interface User {
     _id: string;
@@ -11,9 +12,10 @@ interface User {
 }
 
 interface AuthContextType {
+    token: string | undefined,
     isAuthenticated: boolean;
-    login: (email: string, password: string, address: string | null) => Promise<void>;
-    register: (fullName: string, email: string, password: string, address: string | null) => Promise<void>;
+    login: (email: string, password: string, address: string | null) => Promise<number | undefined>;
+    register: (fullName: string, email: string, password: string, address: string | null) => Promise<number | undefined>;
     logout: () => void;
     user: User | null;
 }
@@ -23,11 +25,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | undefined>(undefined);
     const { address } = useWeb3();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
+            setToken(token);
             setIsAuthenticated(true);
         }
     }, []);
@@ -36,14 +41,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/login`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ email, password, walletAddress: address }),
             });
 
             const data = await response.json();
             if (response.ok) {
                 localStorage.setItem("token", data.token);
+                setToken(data.token);
                 setIsAuthenticated(true);
+                return 1;
             } else {
                 throw new Error(data.message || "Login failed");
             }
@@ -53,10 +63,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const register = async (name: string, email: string, password: string, address: string | null) => {
+        if (!token) return;
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/register`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ name, email, password, walletAddress: address }),
             });
 
@@ -64,6 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (!response.ok) {
                 throw new Error(data.message || "Registration failed");
             }
+            return 1;
         } catch (error) {
             console.error("Registration Error:", error);
         }
@@ -73,11 +88,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem("token");
         setIsAuthenticated(false);
         setUser(null);
+        navigate('/auth');
     };
 
     const fetchStudent = useCallback(async () => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/user/${address}`);
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/user/${address}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             const data = await res.json();
             if (data.user && data.user.name) {
                 setUser(data.user);
@@ -85,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } catch (error) {
             console.error("Error fetching student details:", error);
         }
-    }, [address]);
+    }, [address, token]);
 
     useEffect(() => {
         if (address) {
@@ -94,7 +115,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, [fetchStudent, address]);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, register, logout, user }}>
+        <AuthContext.Provider value={{ token, isAuthenticated, login, register, logout, user }}>
             {children}
         </AuthContext.Provider>
     );

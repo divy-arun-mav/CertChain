@@ -21,14 +21,20 @@ interface Achievement {
 }
 
 const Achievements: React.FC = () => {
-  const { user } = useAuth();
+  const { user,token } = useAuth();
   const [achievements, setAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
     const fetchAchievements = async () => {
       if (!user?._id) return;
+      if (!token) return;
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/${user._id}/achievements`);
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/${user._id}/achievements`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
         const data = await res.json();
         setAchievements(data);
       } catch (err) {
@@ -37,7 +43,7 @@ const Achievements: React.FC = () => {
     };
 
     fetchAchievements();
-  }, [user?._id]);
+  }, [token, user?._id]);
 
   const handleShare = async (achievement: Achievement) => {
     const { hackathonTitle, prize, project } = achievement;

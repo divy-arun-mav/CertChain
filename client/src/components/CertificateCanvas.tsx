@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthContext";
 import { useRef, useEffect, useState } from "react";
 
 type CertificateProps = {
@@ -14,14 +15,20 @@ const CertificateCanvas = ({ certificate }: CertificateProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [studentName, setStudentName] = useState<string>("Student");
     const [loading, setLoading] = useState<boolean>(true);
+    const { token } = useAuth();
 
     const logoUrl = "/logo.jpg";
     const signatureUrl = "/sign.jpg";
 
     useEffect(() => {
         const fetchStudentName = async () => {
+            if (!token) return;
             try {
-                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/user/${certificate.student}`);
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/auth/user/${certificate.student}`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
                 const data = await res.json();
                 if (data.user && data.user.name) {
                     setStudentName(data.user.name);
@@ -33,7 +40,7 @@ const CertificateCanvas = ({ certificate }: CertificateProps) => {
             }
         };
         fetchStudentName();
-    }, [certificate.student]);
+    }, [certificate.student, token]);
 
     useEffect(() => {
         if (loading) return;

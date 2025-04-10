@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 type Module = {
     moduleId: string;
@@ -25,18 +26,24 @@ const EnrolledCourses = () => {
     const { studentAddress } = useParams(); 
     const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
     const navigate = useNavigate();
+    const { token } = useAuth();
 
     useEffect(() => {
         if (!studentAddress) return;
 
-        fetch(`${import.meta.env.VITE_BACKEND_URI}/api/enroll/${studentAddress}`)
+        fetch(`${import.meta.env.VITE_BACKEND_URI}/api/enroll/${studentAddress}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
             .then((res) => res.json())
             .then((data) => {
                 const courses = data.map((enrollment: any) => enrollment.courseId);
                 setEnrolledCourses(courses);
             })
             .catch((err) => console.error("Error fetching enrolled courses:", err));
-    }, [studentAddress]);
+    }, [studentAddress, token]);
 
     const startLearning = (id: string) => {
         navigate(`/learn/${id}`);

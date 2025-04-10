@@ -16,19 +16,24 @@ type Hackathon = {
 
 const ParticipatedHackathons = () => {
     const [hackathons, setHackathons] = useState<Hackathon[]>([]);
-    const { user } = useAuth();
+    const { user,token } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchHackathons = async () => {
             if (!user?._id) return;
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/${user._id}`);
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/${user._id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             const data = await res.json();
             setHackathons(data.hackathons || []);
         };
 
         fetchHackathons();
-    }, [user?._id]);
+    }, [token, user?._id]);
 
     return (
         <div className="min-h-screen w-screen overflow-x-hidden bg-black text-white flex flex-col items-center">

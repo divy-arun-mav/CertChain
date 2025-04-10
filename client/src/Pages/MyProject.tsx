@@ -23,7 +23,7 @@ type Project = {
 };
 
 const MyProject = () => {
-    const { user } = useAuth();
+    const { user, token } = useAuth();
     const location = useLocation();
     const hackathonId = location.state?.hackathonId as string | undefined;
     const create = location.state?.create as boolean | undefined;
@@ -46,7 +46,7 @@ const MyProject = () => {
             try {
                 const endpoint = `${import.meta.env.VITE_BACKEND_URI}/api/projects/my-project?userId=${user._id}&hackathonId=${hackathonId}`;
                 const res = await fetch(endpoint, {
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                 });
                 if (res.ok) {
                     const data = await res.json();
@@ -58,7 +58,7 @@ const MyProject = () => {
             setLoading(false);
         };
         fetchProject();
-    }, [hackathonId, user]);
+    }, [hackathonId, token, user]);
 
     const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -113,7 +113,10 @@ const MyProject = () => {
 
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/projects`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(payload),
             });
 

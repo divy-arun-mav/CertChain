@@ -23,7 +23,7 @@ const HackathonCreator = () => {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [prizes, setPrizes] = useState<Prize[]>([{ title: "", description: "", amount: 0 }]);
 
-    const { user } = useAuth();
+    const { user,token } = useAuth();
     const navigate = useNavigate();
 
     const uploadImageToCloudinary = async (): Promise<string> => {
@@ -35,6 +35,9 @@ const HackathonCreator = () => {
 
         const res = await fetch(`https://api.cloudinary.com/v1_1/djy7my1mw/image/upload`, {
             method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
             body: formData,
         });
         const fileData = await res.json();
@@ -85,7 +88,10 @@ const HackathonCreator = () => {
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(hackathonData),
             });
             const data = await res.json();

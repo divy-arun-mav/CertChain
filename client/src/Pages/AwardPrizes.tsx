@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Github } from "lucide-react";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 
 interface User {
     _id: string;
@@ -45,6 +46,7 @@ const AwardPrizes: React.FC = () => {
     const { state } = useLocation();
     const hackathon = state as Hackathon;
     const navigate = useNavigate();
+    const { token } = useAuth();
     
     const [selectedWinners, setSelectedWinners] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(false);
@@ -83,6 +85,7 @@ const AwardPrizes: React.FC = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({ prizes: awardedPrizes }),
             });
@@ -91,6 +94,9 @@ const AwardPrizes: React.FC = () => {
 
             await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/end/${hackathon._id}`, {
                 method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
 
             for (const prize of awardedPrizes) {
@@ -101,6 +107,7 @@ const AwardPrizes: React.FC = () => {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
                     },
                     body: JSON.stringify({
                         userId: winnerId,

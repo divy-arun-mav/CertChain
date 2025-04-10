@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const { assignRole } = require("../web3/assignRole");
+const authMiddleware = require("../middleware/authMiddleware");
 
 
 const router = express.Router();
@@ -82,7 +83,7 @@ router.post(
     }
 );
 
-router.get("/user/:walletAddress", async (req, res) => {
+router.get("/user/:walletAddress",authMiddleware, async (req, res) => {
     try {
         const { walletAddress } = req.params;
         const user = await User.findOne({ walletAddress });

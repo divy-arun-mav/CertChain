@@ -51,7 +51,7 @@ interface Hackathon {
 }
 
 const CreatorDashboard: React.FC = () => {
-    const { user } = useAuth();
+    const { user,token } = useAuth();
     const [hackathons, setHackathons] = useState<Hackathon[]>([]);
     const navigate = useNavigate();
 
@@ -59,7 +59,12 @@ const CreatorDashboard: React.FC = () => {
         const fetchCreatedHackathons = async () => {
             if (!user?._id) return;
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/creator/${user._id}`);
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/creator/${user._id}`, {
+                    method: 'GET',
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
                 setHackathons(data.hackathons || []);
             } catch (error) {
@@ -68,7 +73,7 @@ const CreatorDashboard: React.FC = () => {
         };
 
         fetchCreatedHackathons();
-    }, [user?._id]);
+    }, [token, user?._id]);
 
     const handleEdit = (hackathon: Hackathon) => {
         navigate(`/edit-hackathon/${hackathon._id}`, { state: hackathon });
@@ -78,6 +83,9 @@ const CreatorDashboard: React.FC = () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/end/${id}`, {
                 method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
             const data = await response.json();
             alert(data.message);

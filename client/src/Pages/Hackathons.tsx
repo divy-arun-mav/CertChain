@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useWeb3 } from "@/context/Web3";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 
 type Hackathon = {
     _id: string;
@@ -21,6 +22,7 @@ const Hackathons = () => {
     const [hackathons, setHackathons] = useState<Hackathon[]>([]);
     const navigate = useNavigate();
     const { certi } = useWeb3();
+    const { token } = useAuth();
 
     const createHack = () => {
         if (certi < 3) {
@@ -31,10 +33,18 @@ const Hackathons = () => {
     }
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons`)
-            .then((res) => res.json())
-            .then((data) => setHackathons(data.hackathons.reverse()));
-    }, []);
+        if(!token) toast.error("You're not authorized login again")
+        if (token) {
+            fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+                .then((res) => res.json())
+                .then((data) => setHackathons(data.hackathons.reverse()));
+        }
+    }, [token]);
 
     return (
         <div className="min-h-screen w-screen overflow-x-hidden bg-black text-white flex flex-col items-center">

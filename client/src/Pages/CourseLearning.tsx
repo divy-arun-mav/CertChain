@@ -1,5 +1,8 @@
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
 const images = [
@@ -31,21 +34,36 @@ const CourseLearning = () => {
     const { courseId } = useParams();
     const [course, setCourse] = useState<Course | null>(null);
     const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const [randomImage, setRandomImage] = useState<string>("");
     const navigate = useNavigate();
+    const { token } = useAuth();
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_BACKEND_URI}/api/courses/${courseId}`)
-            .then((res) => res.json())
-            .then((data) => {
-                setCourse(data);
-                if (data.modules.length > 0) {
-                    setSelectedModule(data.modules[0]); 
-                    setRandomImage(images[Math.floor(Math.random() * images.length)]);
+        if (!token)  toast.error("You're not authorized");
+        if (token) {
+            setLoading(true);
+            fetch(`${import.meta.env.VITE_BACKEND_URI}/api/courses/${courseId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
                 }
             })
-            .catch((err) => console.error("Error fetching course details:", err));
-    }, [courseId]);
+                .then((res) => res.json())
+                .then((data) => {
+                    setCourse(data);
+                    if (data.modules.length > 0) {
+                        setSelectedModule(data.modules[0]);
+                        setRandomImage(images[Math.floor(Math.random() * images.length)]);
+                    }
+                    setLoading(false); 
+                })
+                .catch((err) => {
+                    console.error("Error fetching course details:", err);
+                    setLoading(false); 
+                });
+        }
+    }, [courseId, token]);
 
     useEffect(() => {
         if (selectedModule) {
@@ -62,6 +80,12 @@ const CourseLearning = () => {
             setSelectedModule(course.modules[currentIndex + 1]);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="w-screen h-screen flex justify-center items-center"><Loader /></div>
+        );
+    }
 
 
     return (

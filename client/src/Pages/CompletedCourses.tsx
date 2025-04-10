@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useWeb3 } from "@/context/Web3";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 
 type Course = {
     _id: string;
@@ -30,6 +31,7 @@ const CompletedCourses = () => {
     const [completedCourses, setCompletedCourses] = useState<Enrollment[]>([]);
     const navigate = useNavigate();
     const { address } = useWeb3();
+    const { token } = useAuth();
 
     useEffect(() => {
         if (!address) {
@@ -37,8 +39,14 @@ const CompletedCourses = () => {
             return;
         }
         const fetchCourses = async () => {
+            if(!token) return toast.error("You're not authorized please login again")
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/enroll/completed/` + address);
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/enroll/completed/` + address, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
                 setCompletedCourses(data);
             } catch (error) {
@@ -47,7 +55,7 @@ const CompletedCourses = () => {
             }
         };
         fetchCourses();
-    }, [address]);
+    }, [address, token]);
 
     const handleCourseDetail = () => {
         navigate(`/certificates`);

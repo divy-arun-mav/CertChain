@@ -26,7 +26,7 @@ const StudentTest = () => {
     const [devToolsDetected, setDevToolsDetected] = useState(false);
     const [timeLeft, setTimeLeft] = useState(600);
     const { state, address } = useWeb3();
-    const { user } = useAuth();
+    const { user,token } = useAuth();
     const navigate = useNavigate();
     const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -35,7 +35,10 @@ const StudentTest = () => {
             try {
                 const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/generate-questions`, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
                     body: JSON.stringify({ topic }),
                 });
 
@@ -100,7 +103,7 @@ const StudentTest = () => {
     };
 
     const handleSubmit = async () => {
-        if (submitted) return;
+        if (submitted || !token) return;
         setSubmitted(true);
         let correct = 0;
         const incorrectAnswersMap: Record<number, string> = {};
@@ -123,12 +126,16 @@ const StudentTest = () => {
         const certificate = await issueCertificate(correct);
         console.log(certificate);
         await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/enroll/complete/${courseId}/${address}/${certificate.hash}`, {
-            method: "PUT"
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
         });
         await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/update-points`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 userId: user?._id,
@@ -215,7 +222,7 @@ const StudentTest = () => {
 
     if (devToolsDetected) {
         return (
-            <h1 className="text-red-500 text-center mt-20 text-2xl font-bold">
+            <h1 className="w-screen h-screen text-red-500 text-center mt-20 text-2xl font-bold">
                 Test has been reset due to security policy.
             </h1>
         );

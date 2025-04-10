@@ -63,26 +63,7 @@ function Home() {
                             </div>
                             <motion.div className="flex items-center justify-center" variants={fadeIn}>
                                 <Tilt options={tiltOpts}>
-                                <div className="relative h-[350px] w-[350px] rounded-lg bg-blue-700 p-4 shadow-xl">
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <motion.div
-                                            className="space-y-2 text-center"
-                                            initial={{ scale: 0.8, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            transition={{ duration: 0.8 }}
-                                        >
-                                            <GraduationCap className="mx-auto h-16 w-16 text-blue-300" />
-                                            <div className="text-xl font-bold text-white">Sample Certificate</div>
-                                            <div className="text-sm text-blue-200">University of Technology</div>
-                                            <div className="pt-4 text-sm text-white">This certifies that</div>
-                                            <div className="text-lg font-semibold text-white">John Smith</div>
-                                            <div className="pt-2 text-sm text-white">has successfully completed</div>
-                                            <div className="text-md font-medium text-white">Bachelor of Computer Science</div>
-                                            <div className="mt-4 text-xs text-blue-300">Verified on Blockchain</div>
-                                            <div className="mt-2 text-xs font-mono text-blue-300">0x8f5e...3a2b</div>
-                                        </motion.div>
-                                    </div>
-                                    </div>
+                                    <img className="rounded-lg w-[90%]" src="/certificate.png"/>
                                 </Tilt>
                             </motion.div>
                         </motion.div>

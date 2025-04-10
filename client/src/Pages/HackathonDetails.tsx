@@ -47,7 +47,7 @@ type HackathonDetail = {
 const HackathonDetail = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user,token } = useAuth();
     const hackathon = state as HackathonDetail;
     const [isJoining, setIsJoining] = useState(false);
     const [joinError, setJoinError] = useState("");
@@ -74,6 +74,7 @@ const HackathonDetail = () => {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
                         },
                         body: JSON.stringify({ participantId }),
                     }
@@ -91,7 +92,7 @@ const HackathonDetail = () => {
         if (participantId) {
             checkIfJoined();
         }
-    }, [hackathon._id, participantId]);
+    }, [hackathon._id, participantId, token]);
 
     const joinHackathon = async () => {
 
@@ -109,6 +110,7 @@ const HackathonDetail = () => {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
                     },
                     body: JSON.stringify({ participantId }),
                 }

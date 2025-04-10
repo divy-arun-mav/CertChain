@@ -16,7 +16,7 @@ type Hackathon = {
 };
 
 const CreatedHacks = () => {
-    const { user } = useAuth();
+    const { user,token } = useAuth();
     const navigate = useNavigate();
     const [hackathons, setHackathons] = useState<Hackathon[]>([]);
 
@@ -24,7 +24,12 @@ const CreatedHacks = () => {
         const fetchHackathons = async () => {
             if (!user?._id) return;
             try {
-                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/creator/${user._id}`);
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/creator/${user._id}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
                 const data = await res.json();
                 setHackathons(data.hackathons || []);
             } catch (error) {
@@ -33,11 +38,16 @@ const CreatedHacks = () => {
         };
 
         fetchHackathons();
-    }, [user]);
+    }, [token, user]);
 
     const handleEnd = async (id: string) => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/end/${id}`, { method: "POST" });
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/api/hackathons/end/${id}`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             const data = await res.json();
             alert(data.message);
             setHackathons((prev) =>
