@@ -33,7 +33,7 @@ router.post(
             if (user)
                 return res.status(400).json({ message: "User already exists" });
 
-            const hashedPassword = await bcrypt.hash(password, 10);
+            const hashedPassword = await bcrypt.hash(password, "20d");
             user = new User({ name, email, password: hashedPassword, walletAddress });
 
             const role = assignRole(walletAddress);
@@ -89,7 +89,6 @@ router.get("/user/:walletAddress",authMiddleware, async (req, res) => {
         const user = await User.findOne({ walletAddress });
         if (!user)
             return res.status(400).json({ message: "Invalid wallet address" });
-        console.log(user);
         res.json({ user });
     } catch (error) {
         res.status(500).json({ message: "Server error" });

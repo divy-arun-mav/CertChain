@@ -167,6 +167,8 @@ router.get("/:userId/achievements", async (req, res) => {
             .populate("awardedPrize.winner")
             .populate("submissions.participant")
             .populate("submissions.project");
+        
+        console.log(hackathons);
 
         const achievements = [];
 

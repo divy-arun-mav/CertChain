@@ -34,6 +34,7 @@ const HackathonSchema = new mongoose.Schema({
         description: String,
         amount: Number,
         winner: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+        // project: { type: mongoose.Schema.Types.ObjectId, ref: "Project" }
     }],
 });
 

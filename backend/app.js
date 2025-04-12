@@ -11,6 +11,7 @@ const hackathonRoutes = require("./routes/hackathonRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const leaderboardRoutes = require("./routes/leaderboardRoutes");
 const pointRoutes = require("./routes/pointRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 const Course = require("./models/Course");
 const authMiddleware = require("./middleware/authMiddleware");
 
@@ -31,6 +32,7 @@ app.use("/api/hackathons", authMiddleware, hackathonRoutes);
 app.use("/api/projects", authMiddleware, projectRoutes);
 app.use("/api/leaderboard", authMiddleware, leaderboardRoutes);
 app.use("/api/update-points", authMiddleware, pointRoutes);
+app.use("/api/profile", authMiddleware,profileRoutes);
 
 app.post("/api/compile-contract", authMiddleware, (req, res) => {
     const { sourceCode, contractName } = req.body;

@@ -54,20 +54,21 @@ type Certificate = {
     score: number;
     valid: boolean;
     student: string;
-};
+} | undefined;
 
 
 type UserProfileProps = {
     user: {
-        name: string;
-        rank: number;
-        points: number;
-        bio: string;
-        hackathonTags: string[];
-        hackathons: Hackathon[];
-        achievements: Achievement[];
-        courses: Course[];
-        certificates: Certificate[];
+        badge: string | undefined;
+        name: string | undefined;
+        rank: number | undefined;
+        points: number | undefined;
+        bio: string | undefined;
+        hackathonTags: string[] | undefined;
+        hackathons: Hackathon[] | undefined;
+        achievements: Achievement[] | undefined;
+        courses: Course[] | undefined;
+        certificates: Certificate[] | undefined;
     };
 };
 
@@ -83,7 +84,7 @@ const UserProfile: FC<UserProfileProps> = ({ user }) => {
             <div className="bg-gradient-to-b from-gray-900 to-black border border-[#00A8E8] shadow-lg rounded-md w-full md:w-3/12 flex flex-col items-center gap-4 text-center p-4">
                 <div className="group bg-[#00a6e8d2] rounded-full w-24 h-24 flex items-center justify-center text-4xl shadow-lg hover:scale-105 transition-transform duration-300">
                     <img
-                        src="/Pro.png"
+                        src={`/${user.badge}.png`}
                         alt="profile icon"
                         className="w-full h-full object-cover rounded-full shadow-2xl shadow-[#00a6e8e8] group-hover:-translate-y-1 transition-transform duration-300"
                     />
@@ -99,7 +100,7 @@ const UserProfile: FC<UserProfileProps> = ({ user }) => {
                 <div className="mt-6 w-full">
                     <h3 className="text-[#00A8E8] text-lg font-semibold mb-2">Domains</h3>
                     <div className="flex flex-wrap gap-2 justify-center">
-                        {user.hackathonTags.map((tag, i) => (
+                        {user && user.hackathonTags && user?.hackathonTags.map((tag, i) => (
                             <Badge key={i} className="bg-[#00A8E8] text-sm text-white rounded-full">
                                 {tag}
                             </Badge>
@@ -113,28 +114,34 @@ const UserProfile: FC<UserProfileProps> = ({ user }) => {
             {/* Right Main Content */}
             <div className="w-full md:w-9/12 space-y-10">
                 {/* Hackathons */}
-                <Section title="Hackathons Participated" count={user.hackathons.length}>
-                    <div className="flex gap-4 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-[#00A8E8] scrollbar-track-darkBg py-2">
-                        {user.hackathons.map((hackathon, index) => (
-                            <HackathonCard key={`${hackathon._id}-${index}`} hackathon={hackathon} navigate={navigate} />
-                        ))}
-                    </div>
-                </Section>
+                {
+                    user && (
+                        <>
+                            <Section title="Hackathons Participated" count={user?.hackathons?.length}>
+                                <div className="flex gap-4 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-[#00A8E8] scrollbar-track-darkBg py-2">
+                                    {user?.hackathons?.map((hackathon, index) => (
+                                        <HackathonCard key={`${hackathon._id}-${index}`} hackathon={hackathon} navigate={navigate} />
+                                    ))}
+                                </div>
+                            </Section>
 
-                {/* Achievements */}
-                <Section title="Achievements" count={user.achievements.length}>
-                    {renderAchievements(user.achievements)}
-                </Section>
+                            {/* Achievements */}
+                            <Section title="Achievements" count={user?.achievements?.length}>
+                                {renderAchievements(user?.achievements)}
+                            </Section>
 
-                {/* Courses */}
-                <Section title="Courses Completed" count={user.courses.length}>
-                    {renderScrollableCourses(user.courses)}
-                </Section>
+                            {/* Courses */}
+                            <Section title="Courses Completed" count={user?.courses?.length}>
+                                {renderScrollableCourses(user?.courses)}
+                            </Section>
 
-                {/* Certificates */}
-                <Section title="Certificates" count={user.certificates.length}>
-                    {renderScrollableCertificates(user.certificates)}
-                </Section>
+                            {/* Certificates */}
+                            <Section title="Certificates" count={user?.certificates?.length}>
+                                {renderScrollableCertificates(user?.certificates)}
+                            </Section>
+                        </>
+                    )
+                }
             </div>
         </div>
     );
@@ -161,7 +168,7 @@ const HackathonCard = ({
             <h2 className="text-lg font-semibold mt-2 text-[#00A8E8] text-center">
                 {hackathon.title}
             </h2>
-            <p className="text-sm text-wrap text-gray-400 text-center mt-1">{hackathon.description.slice(0,40)+"...."}</p>
+            <p className="text-sm text-wrap text-gray-400 text-center mt-1">{hackathon.description.slice(0, 40) + "...."}</p>
             {hackathon.theme && (
                 <p className="text-sm text-gray-400 text-center mt-1">
                     Theme: <span className="text-blue-400">{hackathon.theme}</span>
@@ -173,8 +180,8 @@ const HackathonCard = ({
             </p>
             <span
                 className={`text-xs font-medium px-2 py-1 mt-2 rounded-full ${hackathon.status === "completed"
-                        ? "bg-green-700 text-green-200"
-                        : "bg-yellow-700 text-yellow-200"
+                    ? "bg-green-700 text-green-200"
+                    : "bg-yellow-700 text-yellow-200"
                     }`}
             >
                 {hackathon.status}
@@ -192,7 +199,7 @@ const HackathonCard = ({
 
 // ------------------- Sections -------------------
 
-const Section: FC<{ title: string; count: number; children: React.ReactNode }> = ({
+const Section: FC<{ title: string; count: number | undefined; children: React.ReactNode }> = ({
     title,
     count,
     children,
@@ -208,10 +215,10 @@ const Section: FC<{ title: string; count: number; children: React.ReactNode }> =
 
 // ------------------- Achievements Renderer -------------------
 
-const renderAchievements = (achievements: Achievement[]) => {
+const renderAchievements = (achievements: Achievement[]| undefined) => {
     return (
         <div className="flex gap-4 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-[#00A8E8] scrollbar-track-darkBg py-2">
-            {achievements.map((a, i) => (
+            {achievements && achievements.map((a, i) => (
                 <div
                     key={i}
                     className="bg-darkCard border border-[#00A8E8] min-w-[300px] rounded-lg shadow-lg p-4 flex flex-col justify-between"
@@ -240,10 +247,10 @@ const renderAchievements = (achievements: Achievement[]) => {
     );
 };
 
-const renderScrollableCourses = (courses: Course[]) => {
+const renderScrollableCourses = (courses: Course[] | undefined) => {
     return (
         <div className="flex gap-4 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-[#00A8E8] scrollbar-track-darkBg py-2">
-            {courses.map((course, i) => (
+            {courses && courses.map((course, i) => (
                 <div
                     key={i}
                     className="bg-darkCard border border-[#00A8E8] px-4 py-4 rounded-md min-w-[280px] text-sm shadow-md"
@@ -255,7 +262,7 @@ const renderScrollableCourses = (courses: Course[]) => {
                     /> */}
                     <h4 className="text-lg text-wrap text-[#00A8E8] font-bold">{course.courseId.title}</h4>
                     <p className="text-xs text-muted-foreground mt-1">{course.courseId.category}</p>
-                    <p className="text-sm text-gray-300 mt-2 line-clamp-3">{course.courseId.summary.slice(0,40)+"...."}</p>
+                    <p className="text-sm text-gray-300 mt-2 line-clamp-3">{course.courseId.summary.slice(0, 40) + "...."}</p>
                     <p className="text-sm text-muted mt-2">Duration: {course.courseId.duration}</p>
                 </div>
             ))}
@@ -263,31 +270,31 @@ const renderScrollableCourses = (courses: Course[]) => {
     );
 };
 
-const renderScrollableCertificates = (certificates: Certificate[]) => {
+const renderScrollableCertificates = (certificates: Certificate[] | undefined) => {
     return (
         <div className="flex gap-4 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-[#00A8E8] scrollbar-track-darkBg py-2">
-            {certificates.map((cert, i) => (
+            {certificates && certificates?.map((cert, i) => (
                 <div
                     key={i}
                     className="bg-darkCard border border-[#00A8E8] p-4 rounded-lg min-w-[300px] max-w-xs shadow-lg flex flex-col gap-2"
                 >
-                    <h2 className="text-lg font-semibold text-[#00A8E8]">{cert.courseName}</h2>
-                    <p className="text-sm text-gray-400">Issued: {cert.issuedAt}</p>
+                    <h2 className="text-lg font-semibold text-[#00A8E8] text-wrap">{cert?.courseName}</h2>
+                    <p className="text-sm text-gray-400">Issued: {cert?.issuedAt}</p>
 
                     <p className="text-sm text-gray-400">
                         Hash:{" "}
                         <span
                             className="text-blue-400 underline cursor-pointer"
-                            title={cert.certificateHash}
+                            title={cert?.certificateHash}
                         >
-                            {cert.certificateHash.slice(0, 10)}...{cert.certificateHash.slice(-6)}
+                            {cert?.certificateHash.slice(0, 10)}...{cert?.certificateHash.slice(-6)}
                         </span>
                     </p>
 
-                    <p className="text-sm text-gray-400">Score: {cert.score}</p>
+                    <p className="text-sm text-gray-400">Score: {cert?.score}</p>
 
                     <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-800 text-green-200 w-fit">
-                        {cert.valid ? "Valid" : "Invalid"}
+                        {cert?.valid ? "Valid" : "Invalid"}
                     </span>
                 </div>
             ))}
