@@ -81,7 +81,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchDetails = async () => {
             if (!user || !token) {
-                toast.error("Unauthorized");
+                toast.error("You are unauthorized you might have to login again", {duration: 5000,});
                 return;
             }
             if (!address) {

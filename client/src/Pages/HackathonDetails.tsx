@@ -54,6 +54,7 @@ const HackathonDetail = () => {
     const [hasJoined, setHasJoined] = useState(false);
 
     const { certi } = useWeb3();
+    console.log(hackathon)
 
     const participantId = user?._id || "";
 
@@ -67,6 +68,7 @@ const HackathonDetail = () => {
 
     useEffect(() => {
         const checkIfJoined = async () => {
+            console.log(hackathon._id);
             try {
                 const res = await fetch(
                     `${import.meta.env.VITE_BACKEND_URI}/api/hackathons/joined/${hackathon._id}`,

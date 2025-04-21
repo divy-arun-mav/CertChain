@@ -28,21 +28,20 @@ const HackathonCreator = () => {
 
     const uploadImageToCloudinary = async (): Promise<string> => {
         if (!imageFile) return "";
+
         const formData = new FormData();
         formData.append("file", imageFile);
         formData.append("upload_preset", "insta-clone");
-        formData.append("cloud_name", "djy7my1mw");
 
-        const res = await fetch(`https://api.cloudinary.com/v1_1/djy7my1mw/image/upload`, {
+        const res = await fetch("https://api.cloudinary.com/v1_1/djy7my1mw/image/upload", {
             method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            },
             body: formData,
         });
+
         const fileData = await res.json();
-        return fileData.url;
+        return fileData.secure_url;
     };
+
 
     const handlePrizeChange = (index: number, field: keyof Prize, value: string | number) => {
         setPrizes((prev) =>

@@ -35,7 +35,7 @@ const Navbar = () => {
 
     return (
         <header
-            className={`${hideNavbar ? "hidden" : ""} px-5 sticky top-0 z-50 w-full border-b bg-gradient-to-r from-[rgba(0,150,255,0.5)] to-[rgba(0,168,232,0.5)] backdrop-blur supports-[backdrop-filter]:bg-opacity-70`}
+            className={`${hideNavbar ? "hidden" : ""} px-5 sticky top-0 z-49 w-full border-b bg-gradient-to-r from-[rgba(0,150,255,0.5)] to-[rgba(0,168,232,0.5)] backdrop-blur supports-[backdrop-filter]:bg-opacity-70`}
         >
             <div className="container flex h-16 items-center justify-between">
                 <div className="flex items-center gap-2 text-white">

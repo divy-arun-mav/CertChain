@@ -31,6 +31,7 @@ const CreatedHacks = () => {
                     }
                 });
                 const data = await res.json();
+                console.log(data)
                 setHackathons(data.hackathons || []);
             } catch (error) {
                 console.error("Failed to fetch created hackathons", error);

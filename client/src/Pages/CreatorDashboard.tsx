@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { Github } from "lucide-react";
+import Modal from "@/components/Modal";
 
 interface User {
     _id: string;
@@ -50,9 +51,11 @@ interface Hackathon {
     createdAt: string;
 }
 
+
 const CreatorDashboard: React.FC = () => {
     const { user,token } = useAuth();
     const [hackathons, setHackathons] = useState<Hackathon[]>([]);
+    const [selectedDescription, setSelectedDescription] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -66,7 +69,7 @@ const CreatorDashboard: React.FC = () => {
                     }
                 });
                 const data = await response.json();
-                setHackathons(data.hackathons || []);
+                setHackathons(data.hackathons.reverse() || []);
             } catch (error) {
                 console.error("Error fetching created hackathons:", error);
             }
@@ -157,7 +160,12 @@ const CreatorDashboard: React.FC = () => {
                                             >
                                                 <p><strong>By:</strong> {submission.participant.name}</p>
                                                 <p><strong>Project:</strong> {submission.project.title}</p>
-                                                <p className="text-sm text-gray-300"><div className="mt-4" dangerouslySetInnerHTML={{ __html: submission.project.description }}></div></p>
+                                                <Button
+                                                    className="bg-blue-500 hover:bg-blue-700"
+                                                    onClick={() => setSelectedDescription(submission.project.description)}
+                                                >
+                                                    View Project Description
+                                                </Button>
                                                 <p><strong>Submitted:</strong> {new Date(submission.submittedAt).toLocaleString()}</p>
                                                 <a
                                                     href={submission.project.projectUrl}
@@ -215,6 +223,11 @@ const CreatorDashboard: React.FC = () => {
                         </CardContent>
                     </Card>
                 ))}
+                <Modal
+                    isOpen={!!selectedDescription}
+                    onClose={() => setSelectedDescription(null)}
+                    content={selectedDescription || ""}
+                />
             </div>
         </div>
     );
